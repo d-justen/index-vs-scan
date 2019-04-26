@@ -14,5 +14,8 @@ int main(int argc, char *argv[]) {
     char c = 110;
     std::cout << "\n### Scan for values containing '" << std::string(1, c) << "' ###\n";
     scan.scan_contains_char(c);
+
+    std::cout << "\n### Scan for values > " << UINT32_MAX / 2 << " and containing '" << std::string(1, c) << "' ###\n";
+    scan.scan_gt_and_contains(UINT32_MAX / 2, c);
     return 0;
 }

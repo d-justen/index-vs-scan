@@ -17,6 +17,8 @@ class Scan {
 
   size_t scan_contains_char(char c);
 
+  size_t scan_gt_and_contains(size_t gt, char c);
+
  private:
   const std::shared_ptr<Table> _table;
 };

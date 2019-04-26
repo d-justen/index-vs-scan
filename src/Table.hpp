@@ -10,7 +10,8 @@ namespace indexvsscan {
 
 class Table {
  public:
-  Table(uint32_t num_rows);
+  explicit Table(uint32_t num_rows);
+  Table(const Table&) = delete;
 
   std::shared_ptr<std::vector<uint32_t>> get_column_1() { return _column_1; }
   std::shared_ptr<std::vector<std::array<char, 10>>> get_column_2() { return _column_2; }
