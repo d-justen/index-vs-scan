@@ -1,11 +1,16 @@
 #include "Table.hpp"
 
+#include <chrono>
 #include <iostream>
 #include <random>
 
 namespace indexvsscan {
 
 Table::Table(const uint32_t num_rows) {
+  std::cout << "### Create table: 2 colums, " << num_rows << " random rows ###\n";
+
+  const auto start = std::chrono::steady_clock::now();
+
   _column_1 = std::make_shared<std::vector<u_int32_t>>();
   _column_1->reserve(num_rows);
 
@@ -24,6 +29,10 @@ Table::Table(const uint32_t num_rows) {
     for (size_t j = 0; j < 10; j++) column_2_entry[j] = c2_dist(generator);
     _column_2->push_back(column_2_entry);
   }
+
+  const auto end = std::chrono::steady_clock::now();
+  const auto duration = std::chrono::duration_cast<std::chrono::seconds>(end - start).count();
+  std::cout << "Created table in " << duration << " seconds.\n\n";
 }
 
 }  // namespace indexvsscan

@@ -1,3 +1,4 @@
+#include <cstdlib>
 #include <iostream>
 #include "Table.hpp"
 #include "Scan.hpp"
@@ -5,17 +6,20 @@
 using namespace indexvsscan;
 
 int main(int argc, char *argv[]) {
-    auto table = std::make_shared<Table>(10'000'000);
+  size_t num_rows = 1'000'000;
+  if (argc > 1) num_rows *= std::atoi(argv[1]);
 
-    std::cout << "### Scan for values > " << UINT32_MAX / 2 << " ###\n";
-    Scan scan(table);
-    scan.scan_gt(UINT32_MAX / 2);
+  auto table = std::make_shared<Table>(num_rows);
 
-    char c = 110;
-    std::cout << "\n### Scan for values containing '" << std::string(1, c) << "' ###\n";
-    scan.scan_contains_char(c);
+  std::cout << "### Scan for values > " << UINT32_MAX / 2 << " ###\n";
+  Scan scan(table);
+  scan.scan_gt(UINT32_MAX / 2);
 
-    std::cout << "\n### Scan for values > " << UINT32_MAX / 2 << " and containing '" << std::string(1, c) << "' ###\n";
-    scan.scan_gt_and_contains(UINT32_MAX / 2, c);
-    return 0;
+  char c = 110;
+  std::cout << "\n### Scan for values containing '" << std::string(1, c) << "' ###\n";
+  scan.scan_contains_char(c);
+
+  std::cout << "\n### Scan for values > " << UINT32_MAX / 2 << " and containing '" << std::string(1, c) << "' ###\n";
+  scan.scan_gt_and_contains(UINT32_MAX / 2, c);
+  return 0;
 }
