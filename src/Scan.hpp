@@ -20,6 +20,8 @@ class Scan {
   size_t scan_gt_and_contains(size_t gt, char c);
 
  private:
+  void _print_results(size_t data_size, double duration, double selectivity);
+
   const std::shared_ptr<Table> _table;
 };
 
