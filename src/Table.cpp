@@ -17,11 +17,11 @@ Table::Table(const uint32_t num_rows) {
   std::uniform_int_distribution<char> c2_dist(65, 126);
 
   // Fill the vectors
-  for (int i = 0; i < num_rows; i++) {
+  for (size_t i = 0; i < num_rows; i++) {
     _column_1->push_back(c1_dist(generator));
 
     std::array<char, 10> column_2_entry = {};
-    for (int j = 0; j < 10; j++) column_2_entry[j] = c2_dist(generator);
+    for (size_t j = 0; j < 10; j++) column_2_entry[j] = c2_dist(generator);
     _column_2->push_back(column_2_entry);
   }
 }
