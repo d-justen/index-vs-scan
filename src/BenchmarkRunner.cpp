@@ -16,20 +16,21 @@ void BenchmarkRunner::execute() {
     if (column_type == ColumnType::Int) {
       switch (operation) {
         case Operation::Equals : {
-          const Scan scan(_table);
           const auto& column = _table->get_int_column(index);
 
-          size_t count = 0;
           size_t sum_elapsed = 0;
+          size_t result = 0;
           for (size_t i = 0; i < _config.num_runs; i++) {
+            Scan scan(_table);
             const auto start = std::chrono::steady_clock::now();
-            count = scan.int_eq(column, value);
+            scan.int_eq(column, value);
             const auto end = std::chrono::steady_clock::now();
 
             const auto elapsed_microseconds = std::chrono::duration_cast<std::chrono::microseconds>(end - start).count();
             sum_elapsed += elapsed_microseconds;
+            result = scan.get_result()->size();
           }
-          _print_results(_config.num_rows * 4, static_cast<double>(sum_elapsed) / _config.num_runs, static_cast<double>(count) / _config.num_rows);
+          _print_results(_config.num_rows * 4, static_cast<double>(sum_elapsed) / _config.num_runs, static_cast<double>(result) / _config.num_rows);
           break;
         }
         default : std::cout << "Not supported yet.\n";
@@ -38,23 +39,66 @@ void BenchmarkRunner::execute() {
     else if (column_type == ColumnType::String) {
       switch (operation) {
         case Operation::Equals : {
-          const Scan scan(_table);
           const auto& column = _table->get_string_column(index);
           const char c = static_cast<char>(value);
           String string_value = {};
           for (size_t i = 0; i < 10; i++) string_value[i] = c;
 
-          size_t count = 0;
           size_t sum_elapsed = 0;
+          size_t result = 0;
           for (size_t i = 0; i < _config.num_runs; i++) {
+            Scan scan(_table);
             const auto start = std::chrono::steady_clock::now();
-            count = scan.string_eq(column, string_value);
+            scan.string_eq(column, string_value);
             const auto end = std::chrono::steady_clock::now();
 
             const auto elapsed_microseconds = std::chrono::duration_cast<std::chrono::microseconds>(end - start).count();
             sum_elapsed += elapsed_microseconds;
+            result = scan.get_result()->size();
           }
-          _print_results(_config.num_rows * 10, static_cast<double>(sum_elapsed) / _config.num_runs, static_cast<double>(count) / _config.num_rows);
+          _print_results(_config.num_rows * 10, static_cast<double>(sum_elapsed) / _config.num_runs, static_cast<double>(result) / _config.num_rows);
+          break;
+        }
+        case Operation::EqualsIndex : {
+          const char c = static_cast<char>(value);
+          String string_value = {};
+          for (size_t i = 0; i < 10; i++) string_value[i] = c;
+
+          size_t sum_elapsed = 0;
+          size_t result = 0;
+
+          for (size_t i = 0; i < _config.num_runs; i++) {
+            Scan scan(_table);
+            const auto start = std::chrono::steady_clock::now();
+            scan.string_eq_index(index, string_value);
+            const auto end = std::chrono::steady_clock::now();
+
+            const auto elapsed_microseconds = std::chrono::duration_cast<std::chrono::microseconds>(end - start).count();
+            sum_elapsed += elapsed_microseconds;
+            result = scan.get_result()->size();
+          }
+          _print_results(_config.num_rows * 10, static_cast<double>(sum_elapsed) / _config.num_runs, static_cast<double>(result) / _config.num_rows);
+          break;
+        }
+        case Operation::EqualsDict : {
+          const char c = static_cast<char>(value);
+          String string_value = {};
+          for (size_t i = 0; i < 10; i++) string_value[i] = c;
+
+          size_t sum_elapsed = 0;
+          size_t result = 0;
+
+          for (size_t i = 0; i < _config.num_runs; i++) {
+            Scan scan(_table);
+            const auto start = std::chrono::steady_clock::now();
+            scan.string_eq_dict(index, string_value);
+            const auto end = std::chrono::steady_clock::now();
+
+            const auto elapsed_microseconds = std::chrono::duration_cast<std::chrono::microseconds>(end - start).count();
+            sum_elapsed += elapsed_microseconds;
+            result = scan.get_result()->size();
+          }
+          _print_results(_config.num_rows * 10, static_cast<double>(sum_elapsed) / _config.num_runs, static_cast<double>(result) / _config.num_rows);
           break;
         }
         default : std::cout << "Not supported yet.\n";

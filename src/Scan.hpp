@@ -12,10 +12,14 @@ namespace indexvsscan {
 
 class Scan {
  public:
-  Scan(const std::shared_ptr<Table> table) : _table(table) {}
+  Scan(const std::shared_ptr<Table> table) : _table(table), _result(std::make_shared<std::vector<uint32_t>>()) {}
 
-  const size_t int_eq(const IntColumn& column, uint32_t value) const;
-  const size_t string_eq(const StringColumn& column, const String value) const;
+  void int_eq(const IntColumn& column, uint32_t value);
+  void string_eq(const StringColumn& column, const String value);
+  void string_eq_index(const uint32_t id, const String value);
+  void string_eq_dict(const uint32_t id, const String value);
+
+  const std::shared_ptr<std::vector<uint32_t>> get_result() { return _result; };
 /*
   size_t scan_gt(size_t gt);
 
@@ -27,6 +31,7 @@ class Scan {
   void _print_results(size_t data_size, double duration, double selectivity);
 
   const std::shared_ptr<Table> _table;
+  const std::shared_ptr<std::vector<uint32_t>> _result;
 };
 
 }  // namespace indexvsscan

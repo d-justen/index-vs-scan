@@ -1,8 +1,10 @@
 #include "Table.hpp"
 
+#include <algorithm>
 #include <chrono>
 #include <iostream>
 #include <random>
+#include <set>
 
 namespace indexvsscan {
 
@@ -45,13 +47,23 @@ void Table::_make_column(const ColumnType type, const size_t num_rows) {
     columns[columns.size() - 1].reserve(num_rows);
   }
   else if (type == ColumnType::String) {
-    if (!_string_columns) {
-      _string_columns = std::make_shared<std::vector<StringColumn>>();
+    if (!_string_columns) _string_columns = std::make_shared<std::vector<StringColumn>>();
+
+    if (!_dictionaries) {
+      _dictionaries = std::make_shared<std::vector<StringColumn>>();
+      _avs = std::make_shared<std::vector<IntColumn>>();
+      _offsets = std::make_shared<std::vector<IntColumn>>();
+      _indizes = std::make_shared<std::vector<IntColumn>>();
     }
 
     auto& columns = *_string_columns;
     columns.emplace_back(StringColumn());
     columns[columns.size() - 1].reserve(num_rows);
+
+    _dictionaries->emplace_back(StringColumn());
+    _avs->emplace_back(IntColumn());
+    _offsets->emplace_back(IntColumn());
+    _indizes->emplace_back(IntColumn());
   }
 }
 
@@ -68,12 +80,6 @@ void Table::_fill_int_column(const size_t index, const Distribution distribution
       break;
     }
     case Distribution::Normal : {
-      /*
-      std::normal_distribution<uint32_t> dist((value_count + 1) / 2, 1);
-      for (size_t i = 0; i < num_rows; i++) {
-        (*_int_columns)[index].push_back(dist(generator));
-      }
-      */
       std::cout << "Not supported yet.\n";
       break;
     }
@@ -99,22 +105,37 @@ void Table::_fill_string_column(const size_t index, const Distribution distribut
       break;
     }
     case Distribution::Normal : {
-      /*
-      std::normal_distribution<char> dist(65 + (value_count + 1) / 2, 1);
-
-      for (size_t i = 0; i < num_rows; i++) {
-        const char c = dist(generator);
-
-        std::array<char, 10> string = {};
-        for (size_t j = 0; j < 10; j++) string[j] = c;
-
-        (*_string_columns)[index].push_back(string);
-      }
-      */
       std::cout << "Not supported yet.\n";
       break;
     }
   }
+
+  const auto is_equal = [](String a, String b) {
+    for (size_t i = 0; i < a.size(); i++) if (a[i] != b[i]) return false;
+    return true;
+  };
+
+  // Make dictionary
+  const std::set<String> set((*_string_columns)[index].cbegin(), (*_string_columns)[index].cend());
+  (*_dictionaries)[index] = StringColumn(set.cbegin(), set.cend());
+
+  //Make attribute vector
+  for (const auto& str : (*_string_columns)[index]) {
+
+    for (uint32_t i = 0; i < (*_dictionaries)[index].size(); i++) {
+      if (is_equal(str, (*_dictionaries)[index][i])) (*_avs)[index].push_back(i);
+    }
+  }
+
+  // Make indezes and offsets
+  for (const auto& str : (*_dictionaries)[index]) {
+    (*_offsets)[index].push_back((*_indizes)[index].size());
+    for (uint32_t i = 0; i < (*_string_columns)[index].size(); i++) {
+      if (is_equal((*_string_columns)[index][i], str)) (*_indizes)[index].push_back(i);
+    }
+  }
+  (*_offsets)[index].push_back((*_indizes)[index].size());
+
 }
 
 }  // namespace indexvsscan

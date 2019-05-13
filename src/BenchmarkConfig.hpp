@@ -8,7 +8,7 @@ namespace indexvsscan {
 
 enum class ColumnType { Int, String };
 enum class Distribution { Normal, Uniform };
-enum class Operation { Equals, GreaterThan, LowerThan };
+enum class Operation { Equals, EqualsIndex, EqualsDict };
 
 using ValueCount = uint32_t;
 using ColumnDefinition = std::tuple<ColumnType, ValueCount, Distribution>;
