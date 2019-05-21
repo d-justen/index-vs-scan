@@ -110,9 +110,10 @@ void BenchmarkRunner::execute() {
       }
     }
     if ((i % (_config.num_runs / 20)) == 0){
-      std::cout << "## " << static_cast<double>(i)/_config.num_runs*100 << "% ##\n";
+      std::cout << "###\t" << static_cast<double>(i)/_config.num_runs*100 << "%\t###\n";
     }
   }
+  std::cout << "###\t" << 100 << "%\t###\n\n";
   _print_results();
 }
 
