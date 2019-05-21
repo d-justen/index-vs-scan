@@ -20,13 +20,18 @@ class Table {
   Table(const Table&) = delete;
 
   IntColumn& get_int_column(uint32_t i) const { return _int_columns->at(i); }
+  IntColumn& get_int_dictionary(uint32_t i) const { return _int_dictionaries->at(i); }
+  IntColumn& get_int_attribute_vector(uint32_t i) const { return _int_avs->at(i); }
+  IntColumn& get_int_offset(uint32_t i) const { return _int_offsets->at(i); }
+  IntColumn& get_int_indizes(uint32_t i) const { return _int_indizes->at(i); }
+
   StringColumn& get_string_column(uint32_t i) const { return _string_columns->at(i); }
-  StringColumn& get_dictionary(uint32_t i) const { return _dictionaries->at(i); }
-  IntColumn& get_attribute_vector(uint32_t i) const { return _avs->at(i); }
-  IntColumn& get_offset(uint32_t i) const { return _offsets->at(i); }
-  IntColumn& get_indizes(uint32_t i) const { return _indizes->at(i); }
+  StringColumn& get_string_dictionary(uint32_t i) const { return _string_dictionaries->at(i); }
+  IntColumn& get_string_attribute_vector(uint32_t i) const { return _string_avs->at(i); }
+  IntColumn& get_string_offset(uint32_t i) const { return _string_offsets->at(i); }
+  IntColumn& get_string_indizes(uint32_t i) const { return _string_indizes->at(i); }
 
-
+  const size_t num_rows;
 
  private:
 
@@ -35,12 +40,16 @@ class Table {
   void _fill_string_column(size_t index, Distribution distribution, uint32_t value_count, uint32_t num_rows);
 
   std::shared_ptr<std::vector<IntColumn>> _int_columns;
+  std::shared_ptr<std::vector<IntColumn>> _int_dictionaries;
+  std::shared_ptr<std::vector<IntColumn>> _int_avs;
+  std::shared_ptr<std::vector<IntColumn>> _int_offsets;
+  std::shared_ptr<std::vector<IntColumn>> _int_indizes;
 
   std::shared_ptr<std::vector<StringColumn>> _string_columns;
-  std::shared_ptr<std::vector<StringColumn>> _dictionaries;
-  std::shared_ptr<std::vector<IntColumn>> _avs;
-  std::shared_ptr<std::vector<IntColumn>> _offsets;
-  std::shared_ptr<std::vector<IntColumn>> _indizes;
+  std::shared_ptr<std::vector<StringColumn>> _string_dictionaries;
+  std::shared_ptr<std::vector<IntColumn>> _string_avs;
+  std::shared_ptr<std::vector<IntColumn>> _string_offsets;
+  std::shared_ptr<std::vector<IntColumn>> _string_indizes;
 
 };
 

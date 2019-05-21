@@ -16,10 +16,12 @@ class BenchmarkRunner {
   void execute();
 
  private:
-  void _print_results(size_t data_size, double duration, double selectivity);
+  void _print_results();
 
   const BenchmarkConfig _config;
   const std::shared_ptr<Table> _table;
+
+  std::vector<Result> _results;
 };
 
 }  // namespace indexvsscan

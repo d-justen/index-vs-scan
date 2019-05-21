@@ -24,6 +24,14 @@ struct BenchmarkConfig {
   uint32_t num_runs;
 };
 
+struct Result {
+  Instruction instruction;
+  uint32_t num_rows;
+  uint32_t num_bytes;
+  long microseconds;
+  double selectivity;
+};
+
 }  // namespace indexvsscan
 
 #endif // SRC_BENCHMARKCONFIG_HPP_

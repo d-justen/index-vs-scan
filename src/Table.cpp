@@ -8,7 +8,7 @@
 
 namespace indexvsscan {
 
-Table::Table(const BenchmarkConfig& config) {
+Table::Table(const BenchmarkConfig& config) : num_rows(config.num_rows){
   std::cout << "### Create table: " << config.column_definitions.size() << " colums, " << config.num_rows
   << " random rows ###\n";
 
@@ -42,28 +42,40 @@ void Table::_make_column(const ColumnType type, const size_t num_rows) {
       _int_columns = std::make_shared<std::vector<IntColumn>>();
     }
 
+    if (!_int_dictionaries) {
+      _int_dictionaries = std::make_shared<std::vector<IntColumn>>();
+      _int_avs = std::make_shared<std::vector<IntColumn>>();
+      _int_offsets = std::make_shared<std::vector<IntColumn>>();
+      _int_indizes = std::make_shared<std::vector<IntColumn>>();
+    }
+
     auto& columns = *_int_columns;
     columns.emplace_back(IntColumn());
     columns[columns.size() - 1].reserve(num_rows);
+
+    _int_dictionaries->emplace_back(IntColumn());
+    _int_avs->emplace_back(IntColumn());
+    _int_offsets->emplace_back(IntColumn());
+    _int_indizes->emplace_back(IntColumn());
   }
   else if (type == ColumnType::String) {
     if (!_string_columns) _string_columns = std::make_shared<std::vector<StringColumn>>();
 
-    if (!_dictionaries) {
-      _dictionaries = std::make_shared<std::vector<StringColumn>>();
-      _avs = std::make_shared<std::vector<IntColumn>>();
-      _offsets = std::make_shared<std::vector<IntColumn>>();
-      _indizes = std::make_shared<std::vector<IntColumn>>();
+    if (!_string_dictionaries) {
+      _string_dictionaries = std::make_shared<std::vector<StringColumn>>();
+      _string_avs = std::make_shared<std::vector<IntColumn>>();
+      _string_offsets = std::make_shared<std::vector<IntColumn>>();
+      _string_indizes = std::make_shared<std::vector<IntColumn>>();
     }
 
     auto& columns = *_string_columns;
     columns.emplace_back(StringColumn());
     columns[columns.size() - 1].reserve(num_rows);
 
-    _dictionaries->emplace_back(StringColumn());
-    _avs->emplace_back(IntColumn());
-    _offsets->emplace_back(IntColumn());
-    _indizes->emplace_back(IntColumn());
+    _string_dictionaries->emplace_back(StringColumn());
+    _string_avs->emplace_back(IntColumn());
+    _string_offsets->emplace_back(IntColumn());
+    _string_indizes->emplace_back(IntColumn());
   }
 }
 
@@ -84,6 +96,29 @@ void Table::_fill_int_column(const size_t index, const Distribution distribution
       break;
     }
   }
+
+  // Make dictionary
+  const std::set<uint32_t> set((*_int_columns)[index].cbegin(), (*_int_columns)[index].cend());
+  (*_int_dictionaries)[index] = IntColumn(set.cbegin(), set.cend());
+
+  //Make attribute vector
+  for (const auto& number : (*_int_columns)[index]) {
+
+    for (uint32_t i = 0; i < (*_int_dictionaries)[index].size(); i++) {
+      if (number == (*_int_dictionaries)[index][i]) (*_int_avs)[index].push_back(i);
+    }
+  }
+
+  // Make indizes and offsets
+  for (const auto& number : (*_int_dictionaries)[index]) {
+    (*_int_offsets)[index].push_back((*_int_indizes)[index].size());
+    for (uint32_t i = 0; i < (*_int_columns)[index].size(); i++) {
+      if (number == (*_int_columns)[index][i]) (*_int_indizes)[index].push_back(i);
+    }
+  }
+  // Append last index position + 1 to avoid segmentation fault
+  (*_int_offsets)[index].push_back((*_int_indizes)[index].size());
+
 }
 
 void Table::_fill_string_column(const size_t index, const Distribution distribution, const uint32_t value_count,
@@ -98,8 +133,10 @@ void Table::_fill_string_column(const size_t index, const Distribution distribut
         const char c = dist(generator);
 
         std::array<char, 10> string = {};
-        for (size_t j = 0; j < 10; j++) string[j] = c;
-
+        for (size_t j = 0; j < 10; j++) {
+          if (j < 6) string[j] = 'A';
+          else string[j] = c;
+        }
         (*_string_columns)[index].push_back(string);
       }
       break;
@@ -117,24 +154,25 @@ void Table::_fill_string_column(const size_t index, const Distribution distribut
 
   // Make dictionary
   const std::set<String> set((*_string_columns)[index].cbegin(), (*_string_columns)[index].cend());
-  (*_dictionaries)[index] = StringColumn(set.cbegin(), set.cend());
+  (*_string_dictionaries)[index] = StringColumn(set.cbegin(), set.cend());
 
   //Make attribute vector
   for (const auto& str : (*_string_columns)[index]) {
 
-    for (uint32_t i = 0; i < (*_dictionaries)[index].size(); i++) {
-      if (is_equal(str, (*_dictionaries)[index][i])) (*_avs)[index].push_back(i);
+    for (uint32_t i = 0; i < (*_string_dictionaries)[index].size(); i++) {
+      if (is_equal(str, (*_string_dictionaries)[index][i])) (*_string_avs)[index].push_back(i);
     }
   }
 
-  // Make indezes and offsets
-  for (const auto& str : (*_dictionaries)[index]) {
-    (*_offsets)[index].push_back((*_indizes)[index].size());
+  // Make indizes and offsets
+  for (const auto& str : (*_string_dictionaries)[index]) {
+    (*_string_offsets)[index].push_back((*_string_indizes)[index].size());
     for (uint32_t i = 0; i < (*_string_columns)[index].size(); i++) {
-      if (is_equal((*_string_columns)[index][i], str)) (*_indizes)[index].push_back(i);
+      if (is_equal((*_string_columns)[index][i], str)) (*_string_indizes)[index].push_back(i);
     }
   }
-  (*_offsets)[index].push_back((*_indizes)[index].size());
+  // Append last index position + 1 to avoid segmentation fault
+  (*_string_offsets)[index].push_back((*_string_indizes)[index].size());
 
 }
 
