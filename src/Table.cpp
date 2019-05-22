@@ -130,7 +130,11 @@ void Table::_fill_string_column(const size_t index, const uint32_t value_count, 
     std::mt19937 generator(1337);
 
     auto num_selected_value = static_cast<uint32_t >(selectivity * num_rows);
-    std::array<char, 10> select_value = {'A', 'A', 'A', 'A', 'A', 'A', 'A', 'A', 'A'};
+    std::array<char, 10> select_value = {};
+    for(size_t i = 0; i < 10; i++) {
+        select_value[i] = 'A';
+    }
+
     std::vector<std::array<char, 10>> values;
 
     for (size_t char1 = 65; char1 < 123; char1++) {

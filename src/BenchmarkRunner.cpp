@@ -127,7 +127,7 @@ void BenchmarkRunner::_print_results() {
     const auto [column_type, index, operation, value] = _results[i].instruction;
     const auto byte_per_microsecond = (static_cast<double>(_results[i].num_bytes / _results[i].microseconds));
     const auto gb_per_microsecond = byte_per_microsecond / std::pow(1000, 3);
-    const auto gb_per_sencond = gb_per_microsecond * 1'000'000;
+    const auto gb_per_second = gb_per_microsecond * 1'000'000;
 
     const auto rows_count = _results[i].num_rows;
     file << static_cast<uint32_t>(column_type) << ","
@@ -138,7 +138,7 @@ void BenchmarkRunner::_print_results() {
          << _results[i].num_bytes / static_cast<double>(1000 * 1000) << ","
          << _results[i].selectivity << ","
          << _results[i].microseconds << ","
-         << gb_per_sencond << "\n";
+         << gb_per_second << "\n";
   }
 
   file.close();
