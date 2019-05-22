@@ -40,7 +40,7 @@ int main(int argc, char *argv[]) {
       Instruction(ColumnType::Int, 1, Operation::EqualsDict, int_select),
       Instruction(ColumnType::Int, 1, Operation::EqualsIndex, int_select)
     },
-    1000  // 1000 runs TODO 100 * 1000?
+    20  // 1000 runs TODO 100 * 1000?
   };
   const auto table = std::make_shared<Table>(config);
   BenchmarkRunner runner(config, table);
