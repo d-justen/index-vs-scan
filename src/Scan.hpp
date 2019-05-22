@@ -35,7 +35,7 @@ class Scan {
   void _print_results(size_t data_size, double duration, double selectivity);
 
   const std::shared_ptr<Table> _table;
-  const std::shared_ptr<std::vector<uint32_t>> _result; // TODO: Vorallozieren
+  const std::shared_ptr<std::vector<uint32_t>> _result;
 };
 
 }  // namespace indexvsscan
