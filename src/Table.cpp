@@ -16,16 +16,16 @@ Table::Table(const BenchmarkConfig& config) : num_rows(config.num_rows){
 
   size_t int_count = 0, string_count = 0;
   for (const auto& definition : config.column_definitions) {
-    const auto [column_type, value_count, distribution] = definition;
+    const auto [column_type, value_count, selectivity] = definition;
 
     if (column_type == ColumnType::Int) {
       _make_column(column_type, config.num_rows);
-      _fill_int_column(int_count, distribution, value_count, config.num_rows);
+      _fill_int_column(int_count, value_count, selectivity, config.num_rows);
       int_count++; //TODO unnecessary
     }
     else if (column_type == ColumnType::String) {
       _make_column(column_type, string_count);
-      _fill_string_column(string_count, distribution, value_count, config.num_rows);
+      _fill_string_column(string_count, value_count, selectivity, config.num_rows);
       string_count++;
     }
   }
@@ -79,23 +79,27 @@ void Table::_make_column(const ColumnType type, const size_t num_rows) {
   }
 }
 
-void Table::_fill_int_column(const size_t index, const Distribution distribution, const uint32_t value_count,
+void Table::_fill_int_column(const size_t index, const uint32_t value_count, double selectivity,
         const uint32_t num_rows) {
   std::mt19937 generator(1337);
 
-  switch (distribution) {
-    case Distribution::Uniform : {
-      std::uniform_int_distribution<uint32_t> dist(1, value_count);
-      for (size_t i = 0; i < num_rows; i++) {
-        (*_int_columns)[index].push_back(dist(generator));
-      }
-      break;
+    auto num_selected_value = static_cast<uint32_t >(selectivity * num_rows);
+    uint32_t  select_value = 0;
+    std::vector<uint32_t> values;
+
+    for (size_t i = 1; i < value_count; i++) {
+        values.push_back(i);
     }
-    case Distribution::Normal : {
-      std::cout << "Not supported yet.\n";
-      break;
+
+    for (size_t i = 0; i < num_rows; i++) {
+        if(i < num_selected_value) {
+            (*_int_columns)[index].push_back(select_value);
+        } else {
+            (*_int_columns)[index].push_back(values.at(i % values.size()));
+        }
     }
-  }
+
+    std::shuffle((*_int_columns)[index].begin(), (*_int_columns)[index].end(), generator);
 
   // Make dictionary
   const std::set<uint32_t> set((*_int_columns)[index].cbegin(), (*_int_columns)[index].cend());
@@ -121,31 +125,42 @@ void Table::_fill_int_column(const size_t index, const Distribution distribution
 
 }
 
-void Table::_fill_string_column(const size_t index, const Distribution distribution, const uint32_t value_count,
+void Table::_fill_string_column(const size_t index, const uint32_t value_count, const double selectivity,
         const uint32_t num_rows) {
-  std::mt19937 generator(1337);
+    std::mt19937 generator(1337);
 
-  switch (distribution) {
-    case Distribution::Uniform : {
-      std::uniform_int_distribution<char> dist(65, static_cast<char>(65 + value_count - 1));
+    auto num_selected_value = static_cast<uint32_t >(selectivity * num_rows);
+    std::array<char, 10> select_value = {'A', 'A', 'A', 'A', 'A', 'A', 'A', 'A', 'A'};
+    std::vector<std::array<char, 10>> values;
 
-      for (size_t i = 0; i < num_rows; i++) {
-        const char c = dist(generator);
-
-        std::array<char, 10> string = {};
-        for (size_t j = 0; j < 10; j++) {
-          if (j < 6) string[j] = 'A';
-          else string[j] = c;
+    for (size_t char1 = 65; char1 < 123; char1++) {
+        for (size_t char2 = 65; char2 < 123; char2++) {
+            for (size_t char3 = 65; char3 < 123; char3++) {
+                for (size_t char4 = 66; char4 < 123; char4++) {
+                    std::array<char, 10> string = {'A', 'A', 'A', 'A', 'A', 'A',
+                                                   static_cast<char>(char1),
+                                                   static_cast<char>(char2),
+                                                   static_cast<char>(char3),
+                                                   static_cast<char>(char4)};
+                    values.push_back(string);
+                    if (values.size() >= value_count - 1) {
+                        goto fill_column;
+                    }
+                }
+            }
         }
-        (*_string_columns)[index].push_back(string);
-      }
-      break;
     }
-    case Distribution::Normal : {
-      std::cout << "Not supported yet.\n";
-      break;
+
+    fill_column:
+    for (size_t i = 0; i < num_rows; i++) {
+        if(i < num_selected_value) {
+            (*_string_columns)[index].push_back(select_value);
+        } else {
+            (*_string_columns)[index].push_back(values.at(i % values.size()));
+        }
     }
-  }
+
+    std::shuffle((*_string_columns)[index].begin(), (*_string_columns)[index].end(), generator);
 
   const auto is_equal = [](String a, String b) {
     for (size_t i = 0; i < a.size(); i++) if (a[i] != b[i]) return false;
