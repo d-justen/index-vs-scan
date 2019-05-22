@@ -12,35 +12,33 @@ using namespace indexvsscan;
 
 int main(int argc, char *argv[]) {
   uint32_t num_rows = 1'000'000;
+  uint32_t int_select;
+  uint32_t string_select;
   if (argc > 1) num_rows *= std::atoi(argv[1]);
-
-  std::mt19937 generator(1337);
-  std::uniform_int_distribution<char> dist1(65, static_cast<char>(69));
-  std::uniform_int_distribution<char> dist2(65, static_cast<char>(65));
-  std::uniform_int_distribution<uint32_t> dist3(0, 4);
-  std::uniform_int_distribution<uint32_t> dist4(1, 1);
+  if (argc > 2) int_select = std::atoi(argv[2]);
+  if (argc > 3) string_select = std::atoi(argv[3]);
 
   const BenchmarkConfig config {
     num_rows,  // Table length
     {
-      ColumnDefinition(ColumnType::String, 5, Distribution::Uniform),  // Make one StringColumn with 5 distinct values
-      ColumnDefinition(ColumnType::String, 1, Distribution::Uniform),
-      ColumnDefinition(ColumnType::Int, 5, Distribution::Uniform),
-      ColumnDefinition(ColumnType::Int, 1, Distribution::Uniform)
+      ColumnDefinition(ColumnType::String, 5, 0.2),  // Make one StringColumn with 5 distinct values and selectivity 0.2
+      ColumnDefinition(ColumnType::String, 1, 1),
+      ColumnDefinition(ColumnType::Int, 5, 0.2),
+      ColumnDefinition(ColumnType::Int, 1, 1)
     },
     {
-      Instruction(ColumnType::String, 0, Operation::Equals, static_cast<uint32_t>(dist1(generator))),
-      Instruction(ColumnType::String, 0, Operation::EqualsDict, static_cast<uint32_t>(dist1(generator))),
-      Instruction(ColumnType::String, 0, Operation::EqualsIndex, static_cast<uint32_t>(dist1(generator))),
-      Instruction(ColumnType::String, 1, Operation::Equals, static_cast<uint32_t>(dist2(generator))),
-      Instruction(ColumnType::String, 1, Operation::EqualsDict, static_cast<uint32_t>(dist2(generator))),
-      Instruction(ColumnType::String, 1, Operation::EqualsIndex, static_cast<uint32_t>(dist2(generator))),
-      Instruction(ColumnType::Int, 0, Operation::Equals, dist3(generator)),
-      Instruction(ColumnType::Int, 0, Operation::EqualsDict, dist3(generator)),
-      Instruction(ColumnType::Int, 0, Operation::EqualsIndex, dist3(generator)),
-      Instruction(ColumnType::Int, 1, Operation::Equals, dist4(generator)),
-      Instruction(ColumnType::Int, 1, Operation::EqualsDict, dist4(generator)),
-      Instruction(ColumnType::Int, 1, Operation::EqualsIndex, dist4(generator))
+      Instruction(ColumnType::String, 0, Operation::Equals, string_select),
+      Instruction(ColumnType::String, 0, Operation::EqualsDict, string_select),
+      Instruction(ColumnType::String, 0, Operation::EqualsIndex, string_select),
+      Instruction(ColumnType::String, 1, Operation::Equals, string_select),
+      Instruction(ColumnType::String, 1, Operation::EqualsDict, string_select),
+      Instruction(ColumnType::String, 1, Operation::EqualsIndex, string_select),
+      Instruction(ColumnType::Int, 0, Operation::Equals, int_select),
+      Instruction(ColumnType::Int, 0, Operation::EqualsDict, int_select),
+      Instruction(ColumnType::Int, 0, Operation::EqualsIndex, int_select),
+      Instruction(ColumnType::Int, 1, Operation::Equals, int_select),
+      Instruction(ColumnType::Int, 1, Operation::EqualsDict, int_select),
+      Instruction(ColumnType::Int, 1, Operation::EqualsIndex, int_select)
     },
     1000  // 1000 runs TODO 100 * 1000?
   };

@@ -7,11 +7,11 @@
 namespace indexvsscan {
 
 enum class ColumnType { Int, String };
-enum class Distribution { Normal, Uniform };
 enum class Operation { Equals, EqualsIndex, EqualsDict };
 
 using ValueCount = uint32_t;
-using ColumnDefinition = std::tuple<ColumnType, ValueCount, Distribution>;
+using Selectivity = double;
+using ColumnDefinition = std::tuple<ColumnType, ValueCount, Selectivity>;
 
 // 1. Which column type 2. Index of column 3. which operation 4. value to compare
 // Note: if ColumnType::String uint32_t is converted to char ten times
