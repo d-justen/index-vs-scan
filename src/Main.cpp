@@ -11,15 +11,13 @@
 using namespace indexvsscan;
 
 int main(int argc, char *argv[]) {
-  uint32_t num_rows = 1'000'000;
   uint32_t int_select;
   uint32_t string_select;
-  if (argc > 1) num_rows *= std::atoi(argv[1]);
-  if (argc > 2) int_select = std::atoi(argv[2]);
-  if (argc > 3) string_select = std::atoi(argv[3]);
+  if (argc > 1) int_select = std::atoi(argv[1]);
+  if (argc > 2) string_select = std::atoi(argv[2]);
 
   const BenchmarkConfig config {
-    num_rows,  // Table length
+    TABLE_LENGTH,  // Table length muss zur compile time bekannt sein, weil größe der bitsets zur compile time bekannt sein muss
     {
       ColumnDefinition(ColumnType::String, 5, 0.2),  // Make one StringColumn with 5 distinct values and selectivity 0.2
       ColumnDefinition(ColumnType::String, 1, 1),
@@ -28,17 +26,24 @@ int main(int argc, char *argv[]) {
     },
     {
       Instruction(ColumnType::String, 0, Operation::Equals, string_select),
-      Instruction(ColumnType::String, 0, Operation::EqualsDict, string_select),
-      Instruction(ColumnType::String, 0, Operation::EqualsIndex, string_select),
       Instruction(ColumnType::String, 1, Operation::Equals, string_select),
+      Instruction(ColumnType::String, 0, Operation::EqualsBitset, string_select),
+      Instruction(ColumnType::String, 1, Operation::EqualsBitset, string_select),
+      Instruction(ColumnType::String, 0, Operation::EqualsDict, string_select),
       Instruction(ColumnType::String, 1, Operation::EqualsDict, string_select),
+      Instruction(ColumnType::String, 0, Operation::EqualsDictBitset, string_select),
+      Instruction(ColumnType::String, 1, Operation::EqualsDictBitset, string_select),
+      Instruction(ColumnType::String, 0, Operation::EqualsIndex, string_select),
       Instruction(ColumnType::String, 1, Operation::EqualsIndex, string_select),
       Instruction(ColumnType::Int, 0, Operation::Equals, int_select),
-      Instruction(ColumnType::Int, 0, Operation::EqualsDict, int_select),
-      Instruction(ColumnType::Int, 0, Operation::EqualsIndex, int_select),
       Instruction(ColumnType::Int, 1, Operation::Equals, int_select),
+      Instruction(ColumnType::Int, 0, Operation::EqualsBitset, int_select),
+      Instruction(ColumnType::Int, 1, Operation::EqualsBitset, int_select),
+      Instruction(ColumnType::Int, 0, Operation::EqualsDict, int_select),
       Instruction(ColumnType::Int, 1, Operation::EqualsDict, int_select),
-      Instruction(ColumnType::Int, 1, Operation::EqualsIndex, int_select)
+      Instruction(ColumnType::Int, 0, Operation::EqualsDictBitset, int_select),
+      Instruction(ColumnType::Int, 1, Operation::EqualsDictBitset, int_select),
+      Instruction(ColumnType::Int, 0, Operation::EqualsIndex, int_select),
     },
     20  // 1000 runs TODO 100 * 1000?
   };

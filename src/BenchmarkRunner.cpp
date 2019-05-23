@@ -18,11 +18,9 @@ void BenchmarkRunner::execute() {
       if (column_type == ColumnType::Int) {
         switch (operation) {
           case Operation::Equals : {
-            const auto& column = _table->get_int_column(index);
-
             Scan scan(_table);
             const auto start = std::chrono::steady_clock::now();
-            scan.int_eq(column, value);
+            scan.int_eq(index, value);
             const auto end = std::chrono::steady_clock::now();
 
             const auto elapsed_microseconds = std::chrono::duration_cast<std::chrono::microseconds>(end - start).count();
@@ -31,22 +29,46 @@ void BenchmarkRunner::execute() {
                                       static_cast<double>(scan.get_result()->size()) / _config.num_rows});
             break;
           }
-          case Operation::EqualsIndex : {
+          case Operation::EqualsBitset : {
             Scan scan(_table);
             const auto start = std::chrono::steady_clock::now();
-            scan.int_eq_index(index, value);
+            scan.int_eq_bitset(index, value);
             const auto end = std::chrono::steady_clock::now();
 
             const auto elapsed_microseconds = std::chrono::duration_cast<std::chrono::microseconds>(end - start).count();
 
             _results.push_back(Result{instruction, _config.num_rows, _config.num_rows * 4, elapsed_microseconds,
-                                      static_cast<double>(scan.get_result()->size()) / _config.num_rows});
+                                      static_cast<double>(scan.get_result_bitset()->count()) / _config.num_rows});
             break;
           }
           case Operation::EqualsDict : {
             Scan scan(_table);
             const auto start = std::chrono::steady_clock::now();
             scan.int_eq_dict(index, value);
+            const auto end = std::chrono::steady_clock::now();
+
+            const auto elapsed_microseconds = std::chrono::duration_cast<std::chrono::microseconds>(end - start).count();
+
+            _results.push_back(Result{instruction, _config.num_rows, _config.num_rows * 4, elapsed_microseconds,
+                                      static_cast<double>(scan.get_result()->size()) / _config.num_rows});
+            break;
+          }
+          case Operation::EqualsDictBitset : {
+            Scan scan(_table);
+            const auto start = std::chrono::steady_clock::now();
+            scan.int_eq_dict_bitset(index, value);
+            const auto end = std::chrono::steady_clock::now();
+
+            const auto elapsed_microseconds = std::chrono::duration_cast<std::chrono::microseconds>(end - start).count();
+
+            _results.push_back(Result{instruction, _config.num_rows, _config.num_rows * 4, elapsed_microseconds,
+                                      static_cast<double>(scan.get_result_bitset()->count()) / _config.num_rows});
+            break;
+          }
+          case Operation::EqualsIndex : {
+            Scan scan(_table);
+            const auto start = std::chrono::steady_clock::now();
+            scan.int_eq_index(index, value);
             const auto end = std::chrono::steady_clock::now();
 
             const auto elapsed_microseconds = std::chrono::duration_cast<std::chrono::microseconds>(end - start).count();
@@ -68,11 +90,9 @@ void BenchmarkRunner::execute() {
 
         switch (operation) {
           case Operation::Equals : {
-            const auto& column = _table->get_string_column(index);
-
             Scan scan(_table);
             const auto start = std::chrono::steady_clock::now();
-            scan.string_eq(column, string_value);
+            scan.string_eq(index, string_value);
             const auto end = std::chrono::steady_clock::now();
 
             const auto elapsed_microseconds = std::chrono::duration_cast<std::chrono::microseconds>(end - start).count();
@@ -81,10 +101,22 @@ void BenchmarkRunner::execute() {
                                         static_cast<double>(scan.get_result()->size()) / _config.num_rows});
             break;
           }
-          case Operation::EqualsIndex : {
+          case Operation::EqualsBitset : {
             Scan scan(_table);
             const auto start = std::chrono::steady_clock::now();
-            scan.string_eq_index(index, string_value);
+            scan.string_eq_bitset(index, string_value);
+            const auto end = std::chrono::steady_clock::now();
+
+            const auto elapsed_microseconds = std::chrono::duration_cast<std::chrono::microseconds>(end - start).count();
+
+            _results.push_back(Result{instruction, _config.num_rows, _config.num_rows * 4, elapsed_microseconds,
+                                      static_cast<double>(scan.get_result_bitset()->count()) / _config.num_rows});
+            break;
+          }
+          case Operation::EqualsDict : {
+            Scan scan(_table);
+            const auto start = std::chrono::steady_clock::now();
+            scan.string_eq_dict(index, string_value);
             const auto end = std::chrono::steady_clock::now();
 
             const auto elapsed_microseconds = std::chrono::duration_cast<std::chrono::microseconds>(end - start).count();
@@ -93,10 +125,22 @@ void BenchmarkRunner::execute() {
                                       static_cast<double>(scan.get_result()->size()) / _config.num_rows});
             break;
           }
-          case Operation::EqualsDict : {
+          case Operation::EqualsDictBitset : {
             Scan scan(_table);
             const auto start = std::chrono::steady_clock::now();
-            scan.string_eq_dict(index, string_value);
+            scan.string_eq_dict_bitset(index, string_value);
+            const auto end = std::chrono::steady_clock::now();
+
+            const auto elapsed_microseconds = std::chrono::duration_cast<std::chrono::microseconds>(end - start).count();
+
+            _results.push_back(Result{instruction, _config.num_rows, _config.num_rows * 4, elapsed_microseconds,
+                                      static_cast<double>(scan.get_result_bitset()->count()) / _config.num_rows});
+            break;
+          }
+          case Operation::EqualsIndex : {
+            Scan scan(_table);
+            const auto start = std::chrono::steady_clock::now();
+            scan.string_eq_index(index, string_value);
             const auto end = std::chrono::steady_clock::now();
 
             const auto elapsed_microseconds = std::chrono::duration_cast<std::chrono::microseconds>(end - start).count();

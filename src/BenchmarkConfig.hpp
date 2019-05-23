@@ -6,8 +6,10 @@
 
 namespace indexvsscan {
 
+constexpr uint32_t TABLE_LENGTH = 10'000'000;
+
 enum class ColumnType { Int, String };
-enum class Operation { Equals, EqualsIndex, EqualsDict };
+enum class Operation { Equals, EqualsBitset, EqualsDict, EqualsDictBitset, EqualsIndex };
 
 using ValueCount = uint32_t;
 using Selectivity = double;
