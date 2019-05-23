@@ -8,7 +8,9 @@
 
 namespace indexvsscan {
 
-Scan::Scan(const std::shared_ptr<Table> table) : _table(table), _result(std::make_shared<std::vector<uint32_t>>()), _result_bitset() {
+Scan::Scan(const std::shared_ptr<Table> table) : _table(table),
+                                                 _result(std::make_shared<std::vector<uint32_t>>()),
+                                                 _result_bitset(std::make_shared<std::bitset<TABLE_LENGTH>>()) {
   _result->reserve(table->num_rows);
 }
 
@@ -70,7 +72,10 @@ void Scan::int_eq_index(const uint32_t id, const uint32_t value) {
 
   auto& result_ref = *_result;
 
-  result_ref.insert(result_ref.cend(), indizes[offsets[distance]], indizes[offsets[distance+1]]);
+  const auto index_begin = indizes.cbegin() + offsets[distance];
+  const auto index_end = indizes.cbegin() + offsets[distance+1];
+
+  result_ref.insert(result_ref.cbegin(), index_begin, index_end);
 }
 
 void Scan::string_eq(const uint32_t id, const String& value) {
@@ -142,7 +147,10 @@ void Scan::string_eq_index(const uint32_t id, const String& value) {
 
   auto& result_ref = *_result;
 
-  result_ref.insert(result_ref.cend(), indizes[offsets[distance]], indizes[offsets[distance+1]]);
+  const auto index_begin = indizes.cbegin() + offsets[distance];
+  const auto index_end = indizes.cbegin() + offsets[distance+1];
+
+  result_ref.insert(result_ref.cbegin(), index_begin, index_end);
 }
 
 }  // namespace indexvsscan

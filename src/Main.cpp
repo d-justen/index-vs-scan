@@ -44,6 +44,7 @@ int main(int argc, char *argv[]) {
       Instruction(ColumnType::Int, 0, Operation::EqualsDictBitset, int_select),
       Instruction(ColumnType::Int, 1, Operation::EqualsDictBitset, int_select),
       Instruction(ColumnType::Int, 0, Operation::EqualsIndex, int_select),
+      Instruction(ColumnType::Int, 1, Operation::EqualsIndex, int_select),
     },
     20  // 1000 runs TODO 100 * 1000?
   };
