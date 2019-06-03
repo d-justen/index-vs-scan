@@ -16,6 +16,7 @@ class BenchmarkRunner {
   void execute();
 
  private:
+  size_t _count_results(const std::shared_ptr<std::vector<bool>> vec) const;
   void _print_results();
 
   const BenchmarkConfig _config;

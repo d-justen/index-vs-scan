@@ -10,8 +10,9 @@ namespace indexvsscan {
 
 Scan::Scan(const std::shared_ptr<Table> table) : _table(table),
                                                  _result(std::make_shared<std::vector<uint32_t>>()),
-                                                 _result_bitset(std::make_shared<std::bitset<TABLE_LENGTH>>()) {
+                                                 _result_bitset(std::make_shared<std::vector<bool>>()) {
   _result->reserve(table->num_rows);
+  _result_bitset->reserve(TABLE_LENGTH);
 }
 
 void Scan::int_eq(const uint32_t id, const uint32_t value) {
