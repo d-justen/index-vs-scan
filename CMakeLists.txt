@@ -2,11 +2,15 @@ cmake_minimum_required (VERSION 3.2)
 project (IndexVsScan)
 
 set (CMAKE_CXX_STANDARD 17)
+set(CMAKE_MODULE_PATH "${CMAKE_MODULE_PATH};${CMAKE_CURRENT_SOURCE_DIR}/cmake-build-release")
+
+find_package(PAPI REQUIRED)
 
 enable_testing ()
 
 include_directories (${PROJECT_BINARY_DIR}/ext/include)
-link_directories (${PROJECT_BINARY_DIR}/ext/lib)
+include_directories (${PAPI_INCLUDE_DIRS})
+link_directories (${PROJECT_BINARY_DIR}/ext/lib /usr/local/lib/)
 
 add_subdirectory (ext)
 add_subdirectory (src)
@@ -35,3 +39,5 @@ add_custom_target (hfcca
 add_custom_target (review
   DEPENDS cppcheck cpplint hfcca
   COMMENT "Running all checks")
+
+#target_link_libraries(${PROJECT_NAME} ${PAPI_LIBRARIES})
