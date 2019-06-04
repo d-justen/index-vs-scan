@@ -8,9 +8,6 @@
 #include "Scan.hpp"
 
 namespace indexvsscan {
-//TODO: HIGH RESOLUTION CLOCK
-//TODO: bool vec statt bitset
-//cmake lernen (add_compile_options, papi)
 //TODO: btree einbinden
 void BenchmarkRunner::execute() {
   for (size_t i = 0; i < _config.num_runs; i++) {

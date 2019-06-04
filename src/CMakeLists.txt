@@ -15,3 +15,5 @@ target_link_libraries(Main
     ${PROJECT_NAME}
     ${EXTERNAL_LIBRARIES}
 )
+
+add_compile_options(-O3 -ftree-vectorize -Rpass=loop-vectorize -Rpass-missed=loop-vectorize -Rpass-analysis=loop-vectorize)

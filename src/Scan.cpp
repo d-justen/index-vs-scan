@@ -31,7 +31,7 @@ void Scan::int_eq_bitset(const uint32_t id, const uint32_t value) {
   auto& result_ref = *_result_bitset;
 
   for (uint32_t i = 0; i < column.size(); i++) {
-    result_ref[i] = column[i] == value;
+    result_ref.push_back(column[i] == value);
   }
 }
 
@@ -59,7 +59,7 @@ void Scan::int_eq_dict_bitset(const uint32_t id, const uint32_t value) {
   auto& result_ref = *_result_bitset;
 
   for (uint32_t i = 0; i  < av.size(); i++) {
-    result_ref[i] = av[i] == distance;
+    result_ref.push_back(av[i] == distance);
   }
 }
 
@@ -106,7 +106,7 @@ void Scan::string_eq_bitset(const uint32_t id, const String& value) {
   auto& result_ref = *_result_bitset;
 
   for (uint32_t i = 0; i < column.size(); i++) {
-    result_ref[i] = is_equal(column[i], value);
+    result_ref.push_back(is_equal(column[i], value));
   }
 }
 
@@ -134,7 +134,7 @@ void Scan::string_eq_dict_bitset(const uint32_t id, const String& value) {
   auto& result_ref = *_result_bitset;
 
   for (uint32_t i = 0; i  < av.size(); i++) {
-    result_ref[i] = av[i] == distance;
+    result_ref.push_back(av[i] == distance);
   }
 }
 

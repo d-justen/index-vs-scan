@@ -12,6 +12,7 @@ add_subdirectory (ext)
 add_subdirectory (src)
 add_subdirectory (test)
 
+
 add_custom_target (cpplint
   COMMAND find src test \\\( -iname "*.cpp" -o -iname "*.hpp" \\\) ! -iname "*cmake*" | xargs cpplint --linelength=120
   WORKING_DIRECTORY ${PROJECT_SOURCE_DIR}
