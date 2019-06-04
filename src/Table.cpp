@@ -44,7 +44,7 @@ void Table::_make_column(const ColumnType type, const size_t num_rows) {
 
     if (!_int_dictionaries) {
       _int_dictionaries = std::make_shared<std::vector<IntColumn>>();
-      _int_avs = std::make_shared<std::vector<AVColumn>>();
+      _int_avs = std::make_shared<std::vector<IntColumn>>();
       _int_offsets = std::make_shared<std::vector<IntColumn>>();
       _int_indizes = std::make_shared<std::vector<IntColumn>>();
     }
@@ -54,7 +54,7 @@ void Table::_make_column(const ColumnType type, const size_t num_rows) {
     columns[columns.size() - 1].reserve(num_rows);
 
     _int_dictionaries->emplace_back(IntColumn());
-    _int_avs->emplace_back(AVColumn());
+    _int_avs->emplace_back(IntColumn());
     _int_offsets->emplace_back(IntColumn());
     _int_indizes->emplace_back(IntColumn());
   }
@@ -63,7 +63,7 @@ void Table::_make_column(const ColumnType type, const size_t num_rows) {
 
     if (!_string_dictionaries) {
       _string_dictionaries = std::make_shared<std::vector<StringColumn>>();
-      _string_avs = std::make_shared<std::vector<AVColumn>>();
+      _string_avs = std::make_shared<std::vector<IntColumn>>();
       _string_offsets = std::make_shared<std::vector<IntColumn>>();
       _string_indizes = std::make_shared<std::vector<IntColumn>>();
     }
@@ -73,7 +73,7 @@ void Table::_make_column(const ColumnType type, const size_t num_rows) {
     columns[columns.size() - 1].reserve(num_rows);
 
     _string_dictionaries->emplace_back(StringColumn());
-    _string_avs->emplace_back(AVColumn());
+    _string_avs->emplace_back(IntColumn());
     _string_offsets->emplace_back(IntColumn());
     _string_indizes->emplace_back(IntColumn());
   }

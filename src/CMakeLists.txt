@@ -15,5 +15,6 @@ target_link_libraries(Main
     ${PROJECT_NAME}
     ${EXTERNAL_LIBRARIES}
 )
+SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -ftree-vectorize -ftree-vectorizer-verbose=n -fopt-info-vec-missed")
 
-add_compile_options(-O3 -ftree-vectorize -Rpass=loop-vectorize -Rpass-missed=loop-vectorize -Rpass-analysis=loop-vectorize)
+message(STATUS, "CXXFLAGS: ${CMAKE_CXX_FLAGS}")

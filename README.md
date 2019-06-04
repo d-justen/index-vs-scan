@@ -6,6 +6,6 @@ Compile and run (debug)
 
 Compile and run (release)
 1. `mkdir cmake-build-release && cd cmake-build-release`
-2. `cmake -DCMAKE_BUILD_TYPE=Release ..`
+2. `cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_COMPILER=gcc -DCMAKE_CXX_COMPILER=g++ ..`
 3. `make -j4`
 4. `./src/Main`
