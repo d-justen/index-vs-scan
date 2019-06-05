@@ -76,7 +76,7 @@ void Scan::int_eq_index(const uint32_t id, const uint32_t value) {
   const auto& index_begin = indizes.cbegin() + offsets[distance];
   const auto& index_end = indizes.cbegin() + offsets[distance+1];
 
-  result_ref.insert(result_ref.cbegin(), *index_begin, *index_end);
+  result_ref.insert(result_ref.cbegin(), index_begin, index_end);
 }
 
 void Scan::int_eq_tree(const uint32_t id, const uint32_t value) {
@@ -163,7 +163,7 @@ void Scan::string_eq_index(const uint32_t id, const String& value) {
   const auto& index_begin = indizes.cbegin() + offsets[distance];
   const auto& index_end = indizes.cbegin() + offsets[distance+1];
 
-  result_ref.insert(result_ref.cbegin(), *index_begin, *index_end);
+  result_ref.insert(result_ref.cbegin(), index_begin, index_end);
 }
 
 void Scan::string_eq_tree(const uint32_t id, const String& value) {
