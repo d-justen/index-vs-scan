@@ -56,6 +56,11 @@ int main(int argc, char *argv[]) {
       Instruction(ColumnType::String, 2, Operation::EqualsIndex, string_select),
       Instruction(ColumnType::String, 3, Operation::EqualsIndex, string_select),
       Instruction(ColumnType::String, 4, Operation::EqualsIndex, string_select),
+      Instruction(ColumnType::String, 0, Operation::EqualsBTree, string_select),
+      Instruction(ColumnType::String, 1, Operation::EqualsBTree, string_select),
+      Instruction(ColumnType::String, 2, Operation::EqualsBTree, string_select),
+      Instruction(ColumnType::String, 3, Operation::EqualsBTree, string_select),
+      Instruction(ColumnType::String, 4, Operation::EqualsBTree, string_select),
       Instruction(ColumnType::Int, 0, Operation::Equals, int_select),
       Instruction(ColumnType::Int, 1, Operation::Equals, int_select),
       Instruction(ColumnType::Int, 2, Operation::Equals, int_select),
@@ -81,6 +86,11 @@ int main(int argc, char *argv[]) {
       Instruction(ColumnType::Int, 2, Operation::EqualsIndex, int_select),
       Instruction(ColumnType::Int, 3, Operation::EqualsIndex, int_select),
       Instruction(ColumnType::Int, 4, Operation::EqualsIndex, int_select),
+      Instruction(ColumnType::Int, 0, Operation::EqualsBTree, int_select),
+      Instruction(ColumnType::Int, 1, Operation::EqualsBTree, int_select),
+      Instruction(ColumnType::Int, 2, Operation::EqualsBTree, int_select),
+      Instruction(ColumnType::Int, 3, Operation::EqualsBTree, int_select),
+      Instruction(ColumnType::Int, 4, Operation::EqualsBTree, int_select),
     },
     20 // 1000 runs TODO 100 * 1000?
   };

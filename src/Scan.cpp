@@ -73,10 +73,22 @@ void Scan::int_eq_index(const uint32_t id, const uint32_t value) {
 
   auto& result_ref = *_result;
 
-  const auto index_begin = indizes.cbegin() + offsets[distance];
-  const auto index_end = indizes.cbegin() + offsets[distance+1];
+  const auto& index_begin = indizes.cbegin() + offsets[distance];
+  const auto& index_end = indizes.cbegin() + offsets[distance+1];
 
-  result_ref.insert(result_ref.cbegin(), index_begin, index_end);
+  result_ref.insert(result_ref.cbegin(), *index_begin, *index_end);
+}
+
+void Scan::int_eq_tree(const uint32_t id, const uint32_t value) {
+    const auto& tree = _table->get_int_tree(id);
+    const auto results = tree.equal_range(value);
+    auto& result_ref = *_result;
+
+    for (auto it=results.first; it!=results.second; it.increment()) {
+        auto a = (*it).second;
+        result_ref.push_back(a);
+    }
+
 }
 
 void Scan::string_eq(const uint32_t id, const String& value) {
@@ -148,10 +160,22 @@ void Scan::string_eq_index(const uint32_t id, const String& value) {
 
   auto& result_ref = *_result;
 
-  const auto index_begin = indizes.cbegin() + offsets[distance];
-  const auto index_end = indizes.cbegin() + offsets[distance+1];
+  const auto& index_begin = indizes.cbegin() + offsets[distance];
+  const auto& index_end = indizes.cbegin() + offsets[distance+1];
 
-  result_ref.insert(result_ref.cbegin(), index_begin, index_end);
+  result_ref.insert(result_ref.cbegin(), *index_begin, *index_end);
 }
+
+void Scan::string_eq_tree(const uint32_t id, const String& value) {
+    const auto& tree = _table->get_string_tree(id);
+    const auto& results = tree.equal_range(value);
+    auto& result_ref = *_result;
+
+    for (auto it=results.first; it!=results.second; it.increment()) {
+            auto a = (*it).second;
+            result_ref.push_back(a);
+    }
+}
+
 
 }  // namespace indexvsscan
