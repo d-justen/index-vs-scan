@@ -85,8 +85,7 @@ void Scan::int_eq_tree(const uint32_t id, const uint32_t value) {
     auto& result_ref = *_result;
 
     for (auto it=results.first; it!=results.second; it.increment()) {
-        auto a = (*it).second;
-        result_ref.push_back(a);
+        result_ref.push_back((*it).second);
     }
 
 }
@@ -172,8 +171,7 @@ void Scan::string_eq_tree(const uint32_t id, const String& value) {
     auto& result_ref = *_result;
 
     for (auto it=results.first; it!=results.second; it.increment()) {
-            auto a = (*it).second;
-            result_ref.push_back(a);
+        result_ref.push_back((*it).second);
     }
 }
 
