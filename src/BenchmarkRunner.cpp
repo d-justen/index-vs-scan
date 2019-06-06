@@ -77,6 +77,19 @@ void BenchmarkRunner::execute() {
                                       static_cast<double>(scan.get_result()->size()) / _config.num_rows});
             break;
           }
+
+          case Operation::EqualsBTree : {
+                Scan scan(_table);
+                const auto start = std::chrono::high_resolution_clock::now();
+                scan.int_eq_tree(index, value);
+                const auto end = std::chrono::high_resolution_clock::now();
+
+                const auto elapsed_microseconds = std::chrono::duration_cast<std::chrono::microseconds>(end - start).count();
+
+                _results.push_back(Result{instruction, _config.num_rows, _config.num_rows * 4, elapsed_microseconds,
+                                          static_cast<double>(scan.get_result()->size()) / _config.num_rows});
+                break;
+            }
           default : std::cout << "Not supported yet.\n";
         }
       }
@@ -149,6 +162,18 @@ void BenchmarkRunner::execute() {
                                       static_cast<double>(scan.get_result()->size()) / _config.num_rows});
             break;
           }
+          case Operation::EqualsBTree : {
+                Scan scan(_table);
+                const auto start = std::chrono::high_resolution_clock::now();
+                scan.string_eq_tree(index, string_value);
+                const auto end = std::chrono::high_resolution_clock::now();
+
+                const auto elapsed_microseconds = std::chrono::duration_cast<std::chrono::microseconds>(end - start).count();
+
+                _results.push_back(Result{instruction, _config.num_rows, _config.num_rows * 10, elapsed_microseconds,
+                                          static_cast<double>(scan.get_result()->size()) / _config.num_rows});
+                break;
+            }
           default : std::cout << "Not supported yet.\n";
         }
       }

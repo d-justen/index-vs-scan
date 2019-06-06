@@ -20,6 +20,7 @@ class Scan {
   void int_eq_dict(uint32_t id, uint32_t value);
   void int_eq_dict_bitset(uint32_t id, uint32_t value);
   void int_eq_index(uint32_t id, uint32_t value);
+  void int_eq_tree(uint32_t id, uint32_t value);
 
 
   void string_eq(uint32_t id, const String& value);
@@ -27,6 +28,7 @@ class Scan {
   void string_eq_dict(uint32_t id, const String& value);
   void string_eq_dict_bitset(uint32_t id, const String& value);
   void string_eq_index(uint32_t id, const String& value);
+  void string_eq_tree(uint32_t id, const String& value);
 
   const std::shared_ptr<std::vector<uint32_t>> get_result() { return _result; };
   const std::shared_ptr<std::vector<bool>> get_result_bitset() { return _result_bitset; }
