@@ -53,6 +53,10 @@ void Table::_make_column(const ColumnType type, const size_t num_rows) {
       _int_indizes = std::make_shared<std::vector<IntColumn>>();
     }
 
+    if (!_int_trees) {
+        _int_trees = std::make_shared<std::vector<IntTree>>();
+    }
+
     auto& columns = *_int_columns;
     columns.emplace_back(IntColumn());
     columns[columns.size() - 1].reserve(num_rows);
@@ -61,6 +65,7 @@ void Table::_make_column(const ColumnType type, const size_t num_rows) {
     _int_avs->emplace_back(IntColumn());
     _int_offsets->emplace_back(IntColumn());
     _int_indizes->emplace_back(IntColumn());
+    _int_trees->emplace_back(IntTree());
   }
   else if (type == ColumnType::String) {
     if (!_string_columns) _string_columns = std::make_shared<std::vector<StringColumn>>();
@@ -72,6 +77,10 @@ void Table::_make_column(const ColumnType type, const size_t num_rows) {
       _string_indizes = std::make_shared<std::vector<IntColumn>>();
     }
 
+    if (!_string_trees) {
+        _string_trees = std::make_shared<std::vector<StringTree>>();
+    }
+
     auto& columns = *_string_columns;
     columns.emplace_back(StringColumn());
     columns[columns.size() - 1].reserve(num_rows);
@@ -80,6 +89,7 @@ void Table::_make_column(const ColumnType type, const size_t num_rows) {
     _string_avs->emplace_back(IntColumn());
     _string_offsets->emplace_back(IntColumn());
     _string_indizes->emplace_back(IntColumn());
+    _string_trees->emplace_back(StringTree());
   }
 }
 
@@ -131,6 +141,13 @@ void Table::_fill_int_column(const size_t index, const uint32_t value_count, dou
     }
   }
   (*_int_offsets)[index].push_back((*_int_indizes)[index].size());
+
+  // Make Btree
+  for(size_t i = 0; i < ((*_int_columns)[index].size()); i++) {
+      (*_int_trees)[index].insert(std::make_pair((*_int_columns)[index].at(i), i));
+  }
+
+
 }
 
 void Table::_fill_string_column(const size_t index, const uint32_t value_count, const double selectivity,
@@ -196,6 +213,12 @@ void Table::_fill_string_column(const size_t index, const uint32_t value_count, 
     }
   }
   (*_string_offsets)[index].push_back((*_string_indizes)[index].size());
+
+    // Make Btree
+    for(size_t i = 0; i < ((*_string_columns)[index].size()); i++) {
+        (*_string_trees)[index].insert(std::make_pair((*_string_columns)[index].at(i), i));
+    }
+
 }
 
 }  // namespace indexvsscan
