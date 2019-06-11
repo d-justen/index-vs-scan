@@ -8,7 +8,6 @@
 #include "Scan.hpp"
 
 namespace indexvsscan {
-//TODO: btree einbinden
 void BenchmarkRunner::execute() {
   for (size_t i = 0; i < _config.num_runs; i++) {
 
@@ -71,8 +70,8 @@ void BenchmarkRunner::execute() {
             scan.int_eq_index(index, value);
             const auto end = std::chrono::high_resolution_clock::now();
 
-            const auto elapsed_microseconds = std::chrono::duration_cast<std::chrono::microseconds>(end - start).count();
-
+            auto elapsed_microseconds = std::chrono::duration_cast<std::chrono::microseconds>(end - start).count();
+            if (elapsed_microseconds == 0) elapsed_microseconds = 1; //TODO
             _results.push_back(Result{instruction, _config.num_rows, _config.num_rows * 4, elapsed_microseconds,
                                       static_cast<double>(scan.get_result()->size()) / _config.num_rows});
             break;
@@ -122,7 +121,7 @@ void BenchmarkRunner::execute() {
 
             const auto elapsed_microseconds = std::chrono::duration_cast<std::chrono::microseconds>(end - start).count();
 
-            _results.push_back(Result{instruction, _config.num_rows, _config.num_rows * 4, elapsed_microseconds,
+            _results.push_back(Result{instruction, _config.num_rows, _config.num_rows * 10, elapsed_microseconds,
                                       static_cast<double>(_count_results(scan.get_result_bitset())) / _config.num_rows});
             break;
           }
@@ -146,7 +145,7 @@ void BenchmarkRunner::execute() {
 
             const auto elapsed_microseconds = std::chrono::duration_cast<std::chrono::microseconds>(end - start).count();
 
-            _results.push_back(Result{instruction, _config.num_rows, _config.num_rows * 4, elapsed_microseconds,
+            _results.push_back(Result{instruction, _config.num_rows, _config.num_rows * 10, elapsed_microseconds,
                                       static_cast<double>(_count_results(scan.get_result_bitset())) / _config.num_rows});
             break;
           }
@@ -156,8 +155,8 @@ void BenchmarkRunner::execute() {
             scan.string_eq_index(index, string_value);
             const auto end = std::chrono::high_resolution_clock::now();
 
-            const auto elapsed_microseconds = std::chrono::duration_cast<std::chrono::microseconds>(end - start).count();
-
+            auto elapsed_microseconds = std::chrono::duration_cast<std::chrono::microseconds>(end - start).count();
+            if (elapsed_microseconds == 0) elapsed_microseconds = 1; //TODO
             _results.push_back(Result{instruction, _config.num_rows, _config.num_rows * 10, elapsed_microseconds,
                                       static_cast<double>(scan.get_result()->size()) / _config.num_rows});
             break;

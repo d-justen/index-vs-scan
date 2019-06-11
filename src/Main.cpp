@@ -19,29 +19,16 @@ int main(int argc, char *argv[]) {
   const BenchmarkConfig config {
     TABLE_LENGTH,  // Table length muss zur compile time bekannt sein, weil größe der bitsets zur compile time bekannt sein muss
     {
-      /*  ColumnDefinition(ColumnType::String, 100, 0.0001),
-        ColumnDefinition(ColumnType::String, 100, 0.1),  // Make one StringColumn with 5 distinct values and selectivity 0.2
-      ColumnDefinition(ColumnType::String, 100, 0.2),  // Make one StringColumn with 5 distinct values and selectivity 0.2
-      ColumnDefinition(ColumnType::String, 100, 0.3),  // Make one StringColumn with 5 distinct values and selectivity 0.2
-      ColumnDefinition(ColumnType::String, 100, 0.4),
-      ColumnDefinition(ColumnType::String, 100, 0.5),
-      ColumnDefinition(ColumnType::String, 100, 0.6),
-      ColumnDefinition(ColumnType::String, 100, 0.7),  // Make one StringColumn with 5 distinct values and selectivity 0.2
-      ColumnDefinition(ColumnType::String, 100, 0.8),
-      ColumnDefinition(ColumnType::String, 100, 0.9),
-      ColumnDefinition(ColumnType::String, 100, 1),*/
-
-        ColumnDefinition(ColumnType::Int, 100, 0.0001),
-        ColumnDefinition(ColumnType::Int, 100, 0.1),  // Make one StringColumn with 5 distinct values and selectivity 0.2
-        ColumnDefinition(ColumnType::Int, 100, 0.2),  // Make one StringColumn with 5 distinct values and selectivity 0.2
-        ColumnDefinition(ColumnType::Int, 100, 0.3),  // Make one StringColumn with 5 distinct values and selectivity 0.2
-        ColumnDefinition(ColumnType::Int, 100, 0.4),
-        ColumnDefinition(ColumnType::Int, 100, 0.5),
-        ColumnDefinition(ColumnType::Int, 100, 0.6),
-        ColumnDefinition(ColumnType::Int, 100, 0.7),  // Make one StringColumn with 5 distinct values and selectivity 0.2
-        ColumnDefinition(ColumnType::Int, 100, 0.8),
-        ColumnDefinition(ColumnType::Int, 100, 0.9),
-        ColumnDefinition(ColumnType::Int, 100, 1),
+      ColumnDefinition(ColumnType::String, 1000000, 0.00001),  // Make one StringColumn with 5 distinct values and selectivity 0.2
+      ColumnDefinition(ColumnType::String, 1000000, 0.2),  // Make one StringColumn with 5 distinct values and selectivity 0.2
+      ColumnDefinition(ColumnType::String, 1000000, 0.5),  // Make one StringColumn with 5 distinct values and selectivity 0.2
+      ColumnDefinition(ColumnType::String, 1000000, 0.7),  // Make one StringColumn with 5 distinct values and selectivity 0.2
+      ColumnDefinition(ColumnType::String, 1, 1),
+      ColumnDefinition(ColumnType::Int, 1000000, 0.00001),  // Make one StringColumn with 5 distinct values and selectivity 0.2
+      ColumnDefinition(ColumnType::Int, 1000000, 0.2),  // Make one StringColumn with 5 distinct values and selectivity 0.2
+      ColumnDefinition(ColumnType::Int, 1000000, 0.5),  // Make one StringColumn with 5 distinct values and selectivity 0.2
+      ColumnDefinition(ColumnType::Int, 1000000, 0.7),  // Make one StringColumn with 5 distinct values and selectivity 0.2
+      ColumnDefinition(ColumnType::Int, 1, 1),
     },
     {
       /*Instruction(ColumnType::String, 0,  Operation::Equals, string_select),
@@ -121,72 +108,72 @@ int main(int argc, char *argv[]) {
       Instruction(ColumnType::Int, 2,  Operation::Equals, int_select),
       Instruction(ColumnType::Int, 3,  Operation::Equals, int_select),
       Instruction(ColumnType::Int, 4,  Operation::Equals, int_select),
-      Instruction(ColumnType::Int, 5,  Operation::Equals, int_select),
+      /*Instruction(ColumnType::Int, 5,  Operation::Equals, int_select),
       Instruction(ColumnType::Int, 6,  Operation::Equals, int_select),
       Instruction(ColumnType::Int, 7,  Operation::Equals, int_select),
       Instruction(ColumnType::Int, 8,  Operation::Equals, int_select),
       Instruction(ColumnType::Int, 9,  Operation::Equals, int_select),
-      Instruction(ColumnType::Int, 10, Operation::Equals, int_select),
+      Instruction(ColumnType::Int, 10, Operation::Equals, int_select),*/
 
       Instruction(ColumnType::Int, 0,  Operation::EqualsBitset, int_select),
       Instruction(ColumnType::Int, 1,  Operation::EqualsBitset, int_select),
       Instruction(ColumnType::Int, 2,  Operation::EqualsBitset, int_select),
       Instruction(ColumnType::Int, 3,  Operation::EqualsBitset, int_select),
       Instruction(ColumnType::Int, 4,  Operation::EqualsBitset, int_select),
-      Instruction(ColumnType::Int, 5,  Operation::EqualsBitset, int_select),
+      /*Instruction(ColumnType::Int, 5,  Operation::EqualsBitset, int_select),
       Instruction(ColumnType::Int, 6,  Operation::EqualsBitset, int_select),
       Instruction(ColumnType::Int, 7,  Operation::EqualsBitset, int_select),
       Instruction(ColumnType::Int, 8,  Operation::EqualsBitset, int_select),
       Instruction(ColumnType::Int, 9,  Operation::EqualsBitset, int_select),
-      Instruction(ColumnType::Int, 10, Operation::EqualsBitset, int_select),
+      Instruction(ColumnType::Int, 10, Operation::EqualsBitset, int_select),*/
 
       Instruction(ColumnType::Int, 0,  Operation::EqualsDict, int_select),
       Instruction(ColumnType::Int, 1,  Operation::EqualsDict, int_select),
       Instruction(ColumnType::Int, 2,  Operation::EqualsDict, int_select),
       Instruction(ColumnType::Int, 3,  Operation::EqualsDict, int_select),
       Instruction(ColumnType::Int, 4,  Operation::EqualsDict, int_select),
-      Instruction(ColumnType::Int, 5,  Operation::EqualsDict, int_select),
+      /*Instruction(ColumnType::Int, 5,  Operation::EqualsDict, int_select),
       Instruction(ColumnType::Int, 6,  Operation::EqualsDict, int_select),
       Instruction(ColumnType::Int, 7,  Operation::EqualsDict, int_select),
       Instruction(ColumnType::Int, 8,  Operation::EqualsDict, int_select),
       Instruction(ColumnType::Int, 9,  Operation::EqualsDict, int_select),
-      Instruction(ColumnType::Int, 10, Operation::EqualsDict, int_select),
+      Instruction(ColumnType::Int, 10, Operation::EqualsDict, int_select),*/
 
       Instruction(ColumnType::Int, 0,  Operation::EqualsDictBitset, int_select),
       Instruction(ColumnType::Int, 1,  Operation::EqualsDictBitset, int_select),
       Instruction(ColumnType::Int, 2,  Operation::EqualsDictBitset, int_select),
       Instruction(ColumnType::Int, 3,  Operation::EqualsDictBitset, int_select),
       Instruction(ColumnType::Int, 4,  Operation::EqualsDictBitset, int_select),
-      Instruction(ColumnType::Int, 5,  Operation::EqualsDictBitset, int_select),
+      /*Instruction(ColumnType::Int, 5,  Operation::EqualsDictBitset, int_select),
       Instruction(ColumnType::Int, 6,  Operation::EqualsDictBitset, int_select),
       Instruction(ColumnType::Int, 7,  Operation::EqualsDictBitset, int_select),
       Instruction(ColumnType::Int, 8,  Operation::EqualsDictBitset, int_select),
       Instruction(ColumnType::Int, 9,  Operation::EqualsDictBitset, int_select),
-      Instruction(ColumnType::Int, 10, Operation::EqualsDictBitset, int_select),
+      Instruction(ColumnType::Int, 10, Operation::EqualsDictBitset, int_select),*/
 
       Instruction(ColumnType::Int, 0,  Operation::EqualsIndex, int_select),
       Instruction(ColumnType::Int, 1,  Operation::EqualsIndex, int_select),
       Instruction(ColumnType::Int, 2,  Operation::EqualsIndex, int_select),
       Instruction(ColumnType::Int, 3,  Operation::EqualsIndex, int_select),
       Instruction(ColumnType::Int, 4,  Operation::EqualsIndex, int_select),
-      Instruction(ColumnType::Int, 5,  Operation::EqualsIndex, int_select),
+      /*Instruction(ColumnType::Int, 5,  Operation::EqualsIndex, int_select),
       Instruction(ColumnType::Int, 6,  Operation::EqualsIndex, int_select),
       Instruction(ColumnType::Int, 7,  Operation::EqualsIndex, int_select),
       Instruction(ColumnType::Int, 8,  Operation::EqualsIndex, int_select),
       Instruction(ColumnType::Int, 9,  Operation::EqualsIndex, int_select),
-      Instruction(ColumnType::Int, 10, Operation::EqualsIndex, int_select),
+      Instruction(ColumnType::Int, 10, Operation::EqualsIndex, int_select),*/
 
       Instruction(ColumnType::Int, 0,  Operation::EqualsBTree, int_select),
       Instruction(ColumnType::Int, 1,  Operation::EqualsBTree, int_select),
       Instruction(ColumnType::Int, 2,  Operation::EqualsBTree, int_select),
       Instruction(ColumnType::Int, 3,  Operation::EqualsBTree, int_select),
       Instruction(ColumnType::Int, 4,  Operation::EqualsBTree, int_select),
-      Instruction(ColumnType::Int, 5,  Operation::EqualsBTree, int_select),
+      /*Instruction(ColumnType::Int, 5,  Operation::EqualsBTree, int_select),
       Instruction(ColumnType::Int, 6,  Operation::EqualsBTree, int_select),
       Instruction(ColumnType::Int, 7,  Operation::EqualsBTree, int_select),
       Instruction(ColumnType::Int, 8,  Operation::EqualsBTree, int_select),
       Instruction(ColumnType::Int, 9,  Operation::EqualsBTree, int_select),
-      Instruction(ColumnType::Int, 10, Operation::EqualsBTree, int_select),
+      Instruction(ColumnType::Int, 10, Operation::EqualsBTree, int_select),*/
     },
     100 // 1000 runs TODO 100 * 1000?
   };
