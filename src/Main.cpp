@@ -19,16 +19,16 @@ int main(int argc, char *argv[]) {
   const BenchmarkConfig config {
     TABLE_LENGTH,  // Table length muss zur compile time bekannt sein, weil größe der bitsets zur compile time bekannt sein muss
     {
-      ColumnDefinition(ColumnType::String, 10, 0.1),  // Make one StringColumn with 5 distinct values and selectivity 0.2
-      ColumnDefinition(ColumnType::String, 10, 0.2),  // Make one StringColumn with 5 distinct values and selectivity 0.2
-      ColumnDefinition(ColumnType::String, 10, 0.5),  // Make one StringColumn with 5 distinct values and selectivity 0.2
-      ColumnDefinition(ColumnType::String, 10, 0.7),  // Make one StringColumn with 5 distinct values and selectivity 0.2
+      ColumnDefinition(ColumnType::String, 1000000, 0.00001),  // Make one StringColumn with 5 distinct values and selectivity 0.2
+      ColumnDefinition(ColumnType::String, 1000000, 0.2),  // Make one StringColumn with 5 distinct values and selectivity 0.2
+      ColumnDefinition(ColumnType::String, 1000000, 0.5),  // Make one StringColumn with 5 distinct values and selectivity 0.2
+      ColumnDefinition(ColumnType::String, 1000000, 0.7),  // Make one StringColumn with 5 distinct values and selectivity 0.2
       ColumnDefinition(ColumnType::String, 1, 1),
-      ColumnDefinition(ColumnType::Int, 10, 0.1),  // Make one StringColumn with 5 distinct values and selectivity 0.2
-      ColumnDefinition(ColumnType::Int, 10, 0.2),  // Make one StringColumn with 5 distinct values and selectivity 0.2
-      ColumnDefinition(ColumnType::Int, 10, 0.5),  // Make one StringColumn with 5 distinct values and selectivity 0.2
-      ColumnDefinition(ColumnType::Int, 10, 0.7),  // Make one StringColumn with 5 distinct values and selectivity 0.2
-      ColumnDefinition(ColumnType::Int, 10, 1),
+      ColumnDefinition(ColumnType::Int, 1000000, 0.00001),  // Make one StringColumn with 5 distinct values and selectivity 0.2
+      ColumnDefinition(ColumnType::Int, 1000000, 0.2),  // Make one StringColumn with 5 distinct values and selectivity 0.2
+      ColumnDefinition(ColumnType::Int, 1000000, 0.5),  // Make one StringColumn with 5 distinct values and selectivity 0.2
+      ColumnDefinition(ColumnType::Int, 1000000, 0.7),  // Make one StringColumn with 5 distinct values and selectivity 0.2
+      ColumnDefinition(ColumnType::Int, 1, 1),
     },
     {
       Instruction(ColumnType::String, 0, Operation::Equals, string_select),
@@ -82,7 +82,7 @@ int main(int argc, char *argv[]) {
       Instruction(ColumnType::Int, 3, Operation::EqualsIndex, int_select),
       Instruction(ColumnType::Int, 4, Operation::EqualsIndex, int_select),
     },
-    20 // 1000 runs TODO 100 * 1000?
+    100 // 1000 runs TODO 100 * 1000?
   };
   const auto table = std::make_shared<Table>(config);
   BenchmarkRunner runner(config, table);
@@ -90,4 +90,3 @@ int main(int argc, char *argv[]) {
 
   return 0;
 }
-//TODO: papi

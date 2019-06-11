@@ -63,7 +63,7 @@ void Scan::int_eq_dict_bitset(const uint32_t id, const uint32_t value) {
   }
 }
 
-void Scan::int_eq_index(const uint32_t id, const uint32_t value) {
+void Scan::int_eq_index(const uint32_t id, const uint32_t value) { //TODO index mit bitset
   const auto& dict = _table->get_int_dictionary(id);
   const auto& offsets = _table->get_int_offset(id);
   const auto& indizes = _table->get_int_indizes(id);
@@ -80,33 +80,22 @@ void Scan::int_eq_index(const uint32_t id, const uint32_t value) {
 }
 
 void Scan::string_eq(const uint32_t id, const String& value) {
-  const auto is_equal = [](const String& a, const String& b) {
-    for (int i = 0; i < a.size(); i++) if (a[i] != b[i]) return false;
-    return true;
-  };
-
   const auto& column = _table->get_string_column(id);
 
   auto& result_ref = *_result;
 
   for (uint32_t i = 0; i < column.size(); i++) {
-    if (is_equal(column[i], value))
-      result_ref.push_back(i);
+    if (column[i] == value) result_ref.push_back(i);
   }
 }
 
 void Scan::string_eq_bitset(const uint32_t id, const String& value) {
-  const auto is_equal = [](const String& a, const String& b) {
-    return a[0] == b[0] && a[1] == b[1] && a[2] == b[2] && a[3] == b[3] && a[4] == b[4] &&
-           a[5] == b[5] && a[6] == b[6] && a[7] == b[7] && a[8] == b[8] && a[9] == b[9];
-  };
-
   const auto& column = _table->get_string_column(id);
 
   auto& result_ref = *_result_bitset;
 
   for (uint32_t i = 0; i < column.size(); i++) {
-    result_ref.push_back(is_equal(column[i], value));
+    result_ref.push_back(column[i] == value);
   }
 }
 
