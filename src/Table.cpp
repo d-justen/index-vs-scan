@@ -101,7 +101,7 @@ void Table::_fill_int_column(const size_t index, const uint32_t value_count, dou
   std::vector<uint32_t> values;
   uint32_t current_value = 0;
 
-  while(values.size() < value_count) {
+  while(values.size() < value_count - 1) {
       if(current_value !=  value) {
           values.push_back(current_value);
       }
