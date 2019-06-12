@@ -42,8 +42,8 @@ class Table {
  private:
 
   void _make_column(ColumnType type, size_t num_rows);
-  void _fill_int_column(size_t index, uint32_t value_count, double selectivity, uint32_t num_rows);
-  void _fill_string_column(size_t index, uint32_t value_count, double selectivity, uint32_t num_rows);
+  void _fill_int_column(size_t index, uint32_t value_count, double selectivity, uint32_t num_rows, uint32_t value);
+  void _fill_string_column(size_t index, uint32_t value_count, double selectivity, uint32_t num_rows, uint32_t value);
 
   std::shared_ptr<std::vector<IntColumn>> _int_columns;
   std::shared_ptr<std::vector<IntColumn>> _int_dictionaries;
