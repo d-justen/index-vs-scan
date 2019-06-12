@@ -199,7 +199,7 @@ void BenchmarkRunner::_print_results() {
 
   for (size_t i = 0; i < _results.size(); i++) {
     const auto [column_type, index, operation, value] = _results[i].instruction;
-    const auto byte_per_microsecond = (static_cast<double>(_results[i].num_bytes / _results[i].microseconds));
+    const auto byte_per_microsecond = (static_cast<double>(_results[i].num_bytes / std::max(_results[i].microseconds, 1L)));
     const auto gb_per_microsecond = byte_per_microsecond / std::pow(1000, 3);
     const auto gb_per_second = gb_per_microsecond * 1'000'000;
 
