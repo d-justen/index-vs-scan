@@ -14,7 +14,7 @@ Scan::Scan(const std::shared_ptr<Table> table) : _table(table),
   // TODO: Initialisieren, lt implementieren?, papi cache misses btree, index?
 }
 
-void Scan::int_eq(const uint32_t id, const uint32_t value) {
+void Scan::int_eq(const uint32_t id, const uint16_t value) {
   const auto& column = _table->get_int_column(id);
 
   auto& result_ref = *_result;

@@ -80,9 +80,9 @@ void Table::_fill_int_column(const size_t index, const uint32_t value_count, dou
         const long num_rows, const uint32_t value) {
   std::mt19937 generator(1337);
 
-  auto num_selected_value = static_cast<long>(selectivity * num_rows);
-  std::vector<uint32_t> values;
-  uint32_t current_value = 0;
+  auto num_selected_value = selectivity * num_rows;
+  std::vector<uint16_t> values;
+  uint16_t current_value = 0;
 
   while(values.size() < value_count) {
       if(current_value !=  value) {

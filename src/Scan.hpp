@@ -15,7 +15,7 @@ class Scan {
  public:
   Scan(const std::shared_ptr<Table> table);
 
-  void int_eq(uint32_t id, uint32_t value);
+  void int_eq(uint32_t id, uint16_t value);
   void int_eq_bitset(uint32_t id, uint32_t value);
   void int_eq_dict(uint32_t id, uint32_t value);
   void int_eq_dict_bitset(uint32_t id, uint32_t value);
