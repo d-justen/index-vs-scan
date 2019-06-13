@@ -30,7 +30,7 @@ class Scan {
   void string_eq_index(uint32_t id, const String& value);
   void string_eq_tree(uint32_t id, const String& value);
 
-  const std::shared_ptr<std::vector<uint32_t>> get_result() { return _result; };
+  const std::shared_ptr<std::vector<uint16_t>> get_result() { return _result; };
   const std::shared_ptr<std::vector<bool>> get_result_bitset() { return _result_bitset; }
 /*
   size_t scan_gt(size_t gt);
@@ -43,7 +43,7 @@ class Scan {
   void _print_results(size_t data_size, double duration, double selectivity);
 
   const std::shared_ptr<Table> _table;
-  const std::shared_ptr<std::vector<uint32_t>> _result;
+  const std::shared_ptr<std::vector<uint16_t>> _result;
   const std::shared_ptr<std::vector<bool>> _result_bitset;
 
 };

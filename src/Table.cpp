@@ -10,7 +10,7 @@
 
 namespace indexvsscan {
 
-Table::Table(const BenchmarkConfig& config) : num_rows(config.num_rows){ //TODO schneller -> map die vektor speichert
+Table::Table(const BenchmarkConfig& config) : num_rows(config.num_rows) {
   std::cout << "### Create table: " << config.column_definitions.size() << " colums, " << config.num_rows
   << " random rows ###\n";
 
@@ -40,32 +40,15 @@ Table::Table(const BenchmarkConfig& config) : num_rows(config.num_rows){ //TODO 
   std::cout << "Created table in " << duration << " seconds.\n\n";
 }
 
-void Table::_make_column(const ColumnType type, const size_t num_rows) {
+void Table::_make_column(const ColumnType type, const long num_rows) {
   if (type == ColumnType::Int) {
     if (!_int_columns) {
       _int_columns = std::make_shared<std::vector<IntColumn>>();
     }
 
-    if (!_int_dictionaries) {
-      _int_dictionaries = std::make_shared<std::vector<IntColumn>>();
-      _int_avs = std::make_shared<std::vector<IntColumn>>();
-      _int_offsets = std::make_shared<std::vector<IntColumn>>();
-      _int_indizes = std::make_shared<std::vector<IntColumn>>();
-    }
-
-    if (!_int_trees) {
-        _int_trees = std::make_shared<std::vector<IntTree>>();
-    }
-
     auto& columns = *_int_columns;
     columns.emplace_back(IntColumn());
     columns[columns.size() - 1].reserve(num_rows);
-
-    _int_dictionaries->emplace_back(IntColumn());
-    _int_avs->emplace_back(IntColumn());
-    _int_offsets->emplace_back(IntColumn());
-    _int_indizes->emplace_back(IntColumn());
-    _int_trees->emplace_back(IntTree());
   }
   else if (type == ColumnType::String) {
     if (!_string_columns) _string_columns = std::make_shared<std::vector<StringColumn>>();
@@ -94,10 +77,10 @@ void Table::_make_column(const ColumnType type, const size_t num_rows) {
 }
 
 void Table::_fill_int_column(const size_t index, const uint32_t value_count, double selectivity,
-        const uint32_t num_rows, const uint32_t value) {
+        const long num_rows, const uint32_t value) {
   std::mt19937 generator(1337);
 
-  auto num_selected_value = static_cast<uint32_t >(selectivity * num_rows);
+  auto num_selected_value = static_cast<long>(selectivity * num_rows);
   std::vector<uint32_t> values;
   uint32_t current_value = 0;
 
@@ -108,7 +91,7 @@ void Table::_fill_int_column(const size_t index, const uint32_t value_count, dou
       current_value++;
   }
 
-  for (size_t i = 0; i < num_rows; i++) {
+  for (long i = 0; i < num_rows; i++) {
       if(i < num_selected_value) {
           (*_int_columns)[index].push_back(value);
       } else {
@@ -117,44 +100,10 @@ void Table::_fill_int_column(const size_t index, const uint32_t value_count, dou
   }
 
   std::shuffle((*_int_columns)[index].begin(), (*_int_columns)[index].end(), generator);
-
-  // Map column values to their positions
-  std::map<uint32_t, std::vector<uint32_t>> map;
-
-  for (uint32_t i = 0; i< (*_int_columns)[index].size(); i++) {
-    uint32_t val = (*_int_columns)[index][i];
-
-    if (map.find(val) != map.cend()) {
-      map[val].push_back(i);
-    } else {
-      map[val] = std::vector<uint32_t>{i};
-    }
-  }
-
-  // Make dictionary, attribute vector, offset and index
-  (*_int_avs)[index] = IntColumn(num_rows);
-
-  for (auto it = map.begin(); it != map.end(); ++it) {
-    (*_int_dictionaries)[index].push_back(it->first);  // Add val to dictionary
-    (*_int_offsets)[index].push_back((*_int_indizes)[index].size());  // Add offset
-
-    for (const auto& val : it->second) {
-      (*_int_avs)[index][val] = (*_int_dictionaries)[index].size() - 1;  // Fill dictionary position in attribute vector
-      (*_int_indizes)[index].push_back(val);  // Add index
-    }
-  }
-  (*_int_offsets)[index].push_back((*_int_indizes)[index].size());
-
-  // Make Btree
-  for(size_t i = 0; i < ((*_int_columns)[index].size()); i++) {
-      (*_int_trees)[index].insert(std::make_pair((*_int_columns)[index].at(i), i));
-  }
-
-
 }
 
 void Table::_fill_string_column(const size_t index, const uint32_t value_count, const double selectivity,
-        const uint32_t num_rows, const uint32_t value) {
+        const long num_rows, const uint32_t value) {
     std::mt19937 generator(1337);
 
 

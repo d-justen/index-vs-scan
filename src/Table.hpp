@@ -12,7 +12,7 @@
 namespace indexvsscan {
 
 using String = std::array<char, 10>;
-using IntColumn = std::vector<uint32_t>;
+using IntColumn = std::vector<uint16_t>;
 using AVColumn = std::vector<uint8_t>;
 using StringColumn = std::vector<String>;
 using StringTree = btree::btree_multimap<String, uint32_t >;
@@ -37,13 +37,13 @@ class Table {
   IntColumn& get_string_indizes(uint32_t i) const { return _string_indizes->at(i); }
   StringTree& get_string_tree(uint32_t i) const { return _string_trees->at(i); }
 
-  const size_t num_rows;
+  const long num_rows;
 
  private:
 
-  void _make_column(ColumnType type, size_t num_rows);
-  void _fill_int_column(size_t index, uint32_t value_count, double selectivity, uint32_t num_rows, uint32_t value);
-  void _fill_string_column(size_t index, uint32_t value_count, double selectivity, uint32_t num_rows, uint32_t value);
+  void _make_column(ColumnType type, long num_rows);
+  void _fill_int_column(size_t index, uint32_t value_count, double selectivity, long num_rows, uint32_t value);
+  void _fill_string_column(size_t index, uint32_t value_count, double selectivity, long num_rows, uint32_t value);
 
   std::shared_ptr<std::vector<IntColumn>> _int_columns;
   std::shared_ptr<std::vector<IntColumn>> _int_dictionaries;

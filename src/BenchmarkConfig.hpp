@@ -6,7 +6,7 @@
 
 namespace indexvsscan {
 
-constexpr uint32_t TABLE_LENGTH = 10'000'000;
+constexpr long TABLE_LENGTH = 5'000'000'000;
 
 enum class ColumnType { Int, String };
 enum class Operation { Equals, EqualsBitset, EqualsDict, EqualsDictBitset, EqualsIndex, EqualsBTree };
@@ -21,7 +21,7 @@ using ColumnDefinition = std::tuple<ColumnType, ValueCount, Selectivity, Value>;
 using Instruction = std::tuple<ColumnType, uint32_t, Operation, uint32_t>;
 
 struct BenchmarkConfig {
-  uint32_t num_rows;
+  long num_rows;
   std::vector<ColumnDefinition> column_definitions;
   std::vector<Instruction> instructions;
   uint32_t num_runs;
@@ -29,8 +29,8 @@ struct BenchmarkConfig {
 
 struct Result {
   Instruction instruction;
-  uint32_t num_rows;
-  uint32_t num_bytes;
+  long num_rows;
+  long num_bytes;
   long microseconds;
   double selectivity;
 };

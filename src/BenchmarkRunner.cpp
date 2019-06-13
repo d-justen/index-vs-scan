@@ -17,11 +17,13 @@ void BenchmarkRunner::execute() {
       if (column_type == ColumnType::Int) {
         switch (operation) {
           case Operation::Equals : {
+            std::cout << "Constructing Scan...\n";
             Scan scan(_table);
+            std::cout << "Starting Scan...\n";
             const auto start = std::chrono::high_resolution_clock::now();
             scan.int_eq(index, value);
             const auto end = std::chrono::high_resolution_clock::now();
-
+            std::cout << "Finished scan.\n";
             const auto elapsed_microseconds = std::chrono::duration_cast<std::chrono::microseconds>(end - start).count();
 
             _results.push_back(Result{instruction, _config.num_rows, _config.num_rows * 4, elapsed_microseconds,
@@ -176,9 +178,6 @@ void BenchmarkRunner::execute() {
           default : std::cout << "Not supported yet.\n";
         }
       }
-    }
-    if ((i % (_config.num_runs / 20)) == 0){
-      std::cout << "###\t" << static_cast<double>(i)/_config.num_runs*100 << "%\t###\n";
     }
   }
   std::cout << "###\t" << 100 << "%\t###\n\n";
