@@ -315,7 +315,7 @@ void BenchmarkRunner::execute() {
             case Operation::LessOrEqualsBTree : {
                 Scan scan(_table);
                 const auto start = std::chrono::high_resolution_clock::now();
-                scan.string_leq_index(index, string_value);
+                scan.string_leq_tree(index, string_value);
                 const auto end = std::chrono::high_resolution_clock::now();
 
                 const auto elapsed_microseconds = std::chrono::duration_cast<std::chrono::microseconds>(end - start).count();
@@ -361,7 +361,7 @@ void BenchmarkRunner::_print_results() {
          << value << ","
          << rows_count << ","
          << _results[i].num_bytes / static_cast<double>(1000 * 1000) << ","
-         << _results[i].selectivity << ","
+         << std::round(_results[i].selectivity * 10'000) / 10'000.0 << ","
          << _results[i].microseconds << ","
          << gb_per_second << "\n";
   }
