@@ -6,15 +6,17 @@
 
 namespace indexvsscan {
 
-constexpr uint32_t TABLE_LENGTH = 10'000'000;
+constexpr uint32_t TABLE_LENGTH = 1'000'000;
 
 enum class ColumnType { Int, String };
-enum class Operation { Equals, EqualsBitset, EqualsDict, EqualsDictBitset, EqualsIndex, EqualsBTree };
+enum class Operation { Equals, EqualsBitset, EqualsDict, EqualsDictBitset, EqualsIndex, EqualsBTree,
+        LessOrEquals, LessOrEqualsBitset, LessOrEqualsDict, LessOrEqualsDictBitset, LessOrEqualsIndex, LessOrEqualsBTree, };
+enum class OperationType { Equals, LessOrEquals };
 
 using ValueCount = uint32_t;
 using Selectivity = double;
 using Value = uint32_t;
-using ColumnDefinition = std::tuple<ColumnType, ValueCount, Selectivity, Value>;
+using ColumnDefinition = std::tuple<ColumnType, ValueCount, OperationType , Selectivity, Value>;
 
 // 1. Which column type 2. Index of column 3. which operation 4. value to compare
 // Note: if ColumnType::String uint32_t is converted to char ten times

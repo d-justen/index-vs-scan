@@ -22,13 +22,26 @@ class Scan {
   void int_eq_index(uint32_t id, uint32_t value);
   void int_eq_tree(uint32_t id, uint32_t value);
 
-
   void string_eq(uint32_t id, const String& value);
   void string_eq_bitset(uint32_t id, const String& value);
   void string_eq_dict(uint32_t id, const String& value);
   void string_eq_dict_bitset(uint32_t id, const String& value);
   void string_eq_index(uint32_t id, const String& value);
   void string_eq_tree(uint32_t id, const String& value);
+
+  void int_leq(uint32_t id, uint32_t value);
+  void int_leq_bitset(uint32_t id, uint32_t value);
+  void int_leq_dict(uint32_t id, uint32_t value);
+  void int_leq_dict_bitset(uint32_t id, uint32_t value);
+  void int_leq_index(uint32_t id, uint32_t value);
+  void int_leq_tree(uint32_t id, uint32_t value);
+
+  void string_leq(uint32_t id, const String& value);
+  void string_leq_bitset(uint32_t id, const String& value);
+  void string_leq_dict(uint32_t id, const String& value);
+  void string_leq_dict_bitset(uint32_t id, const String& value);
+  void string_leq_index(uint32_t id, const String& value);
+  void string_leq_tree(uint32_t id, const String& value);
 
   const std::shared_ptr<std::vector<uint32_t>> get_result() { return _result; };
   const std::shared_ptr<std::vector<bool>> get_result_bitset() { return _result_bitset; }
@@ -40,8 +53,6 @@ class Scan {
   size_t scan_gt_and_contains(size_t gt, char c);
 */
  private:
-  void _print_results(size_t data_size, double duration, double selectivity);
-
   const std::shared_ptr<Table> _table;
   const std::shared_ptr<std::vector<uint32_t>> _result;
   const std::shared_ptr<std::vector<bool>> _result_bitset;

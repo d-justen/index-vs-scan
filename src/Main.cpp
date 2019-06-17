@@ -12,8 +12,8 @@ using namespace indexvsscan;
 
 int main(int argc, char *argv[]) {
     std::mt19937 generator(1337);
-    std::uniform_int_distribution<uint32_t> int_dist(0, UINT32_MAX);
-    std::uniform_int_distribution<uint32_t> string_dist(65, 123);
+    std::uniform_int_distribution<uint32_t> int_dist((UINT32_MAX / 2) - 1000, (UINT32_MAX / 2) + 1000);
+    std::uniform_int_distribution<uint32_t> string_dist(92, 94);
     uint32_t int_select = int_dist(generator);
     uint32_t string_select = string_dist(generator);
 
@@ -21,12 +21,12 @@ int main(int argc, char *argv[]) {
   const BenchmarkConfig config {
     TABLE_LENGTH,  // Table length muss zur compile time bekannt sein, weil größe der bitsets zur compile time bekannt sein muss
     {
-      ColumnDefinition(ColumnType::String, 10, 0.01, string_select),  // Make one StringColumn with 5 distinct values and selectivity 0.2
-      ColumnDefinition(ColumnType::String, 10, 0.1, string_select),
-      ColumnDefinition(ColumnType::String, 10, 0.2, string_select),  // Make one StringColumn with 5 distinct values and selectivity 0.2
-      ColumnDefinition(ColumnType::String, 10, 0.3, string_select),
-      ColumnDefinition(ColumnType::String, 10, 0.4, string_select),
-      ColumnDefinition(ColumnType::String, 10, 0.5, string_select),  // Make one StringColumn with 5 distinct values and selectivity 0.2
+      //ColumnDefinition(ColumnType::String, 10, OperationType::Equals, 0.01, string_select),  // Make one StringColumn with 5 distinct values and selectivity 0.2
+      //ColumnDefinition(ColumnType::String, 10, OperationType::Equals, 0.1, string_select),
+      //ColumnDefinition(ColumnType::String, 10, OperationType::Equals, 0.2, string_select),  // Make one StringColumn with 5 distinct values and selectivity 0.2
+      //ColumnDefinition(ColumnType::String, 10, OperationType::Equals, 0.3, string_select),
+      //ColumnDefinition(ColumnType::String, 10, OperationType::Equals, 0.4, string_select),
+      /*ColumnDefinition(ColumnType::String, 10, 0.5, string_select),  // Make one StringColumn with 5 distinct values and selectivity 0.2
       ColumnDefinition(ColumnType::String, 10, 0.6, string_select),
       ColumnDefinition(ColumnType::String, 10, 0.7, string_select),  // Make one StringColumn with 5 distinct values and selectivity 0.2
       ColumnDefinition(ColumnType::String, 10, 0.8, string_select),
@@ -36,27 +36,27 @@ int main(int argc, char *argv[]) {
       ColumnDefinition(ColumnType::Int, 10, 0.1, int_select),
       ColumnDefinition(ColumnType::Int, 10, 0.2, int_select),  // Make one StringColumn with 5 distinct values and selectivity 0.2
       ColumnDefinition(ColumnType::Int, 10, 0.3, int_select),
-      ColumnDefinition(ColumnType::Int, 10, 0.4, int_select),
-      ColumnDefinition(ColumnType::Int, 10, 0.5, int_select),  // Make one StringColumn with 5 distinct values and selectivity 0.2
-      ColumnDefinition(ColumnType::Int, 10, 0.6, int_select),
+      ColumnDefinition(ColumnType::Int, 10, 0.4, int_select),*/
+      ColumnDefinition(ColumnType::String, 1'000'000, OperationType::LessOrEquals, 0.8, int_select),  // Make one StringColumn with 5 distinct values and selectivity 0.2
+      /*ColumnDefinition(ColumnType::Int, 10, 0.6, int_select),
       ColumnDefinition(ColumnType::Int, 10, 0.7, int_select),  // Make one StringColumn with 5 distinct values and selectivity 0.2
       ColumnDefinition(ColumnType::Int, 10, 0.8, int_select),
-      ColumnDefinition(ColumnType::Int, 10, 0.9, int_select),
+      ColumnDefinition(ColumnType::Int, 10, 0.9, int_select),*/
     },
     {
-      Instruction(ColumnType::String, 0,  Operation::Equals, string_select),
-      Instruction(ColumnType::String, 1,  Operation::Equals, string_select),
-      Instruction(ColumnType::String, 2,  Operation::Equals, string_select),
-      Instruction(ColumnType::String, 3,  Operation::Equals, string_select),
-      Instruction(ColumnType::String, 4,  Operation::Equals, string_select),
-      Instruction(ColumnType::String, 5,  Operation::Equals, string_select),
-      Instruction(ColumnType::String, 6,  Operation::Equals, string_select),
-      Instruction(ColumnType::String, 7,  Operation::Equals, string_select),
-      Instruction(ColumnType::String, 8,  Operation::Equals, string_select),
-      Instruction(ColumnType::String, 9,  Operation::Equals, string_select),
+      //Instruction(ColumnType::String, 0,  Operation::Equals, string_select),
+      //Instruction(ColumnType::String, 1,  Operation::Equals, string_select),
+      //Instruction(ColumnType::String, 2,  Operation::Equals, string_select),
+      //Instruction(ColumnType::String, 3,  Operation::Equals, string_select),
+      //Instruction(ColumnType::String, 4,  Operation::Equals, string_select),
+      //Instruction(ColumnType::String, 5,  Operation::Equals, string_select),
+      //Instruction(ColumnType::String, 6,  Operation::Equals, string_select),
+      //Instruction(ColumnType::String, 7,  Operation::Equals, string_select),
+      //Instruction(ColumnType::String, 8,  Operation::Equals, string_select),
+      //Instruction(ColumnType::String, 9,  Operation::Equals, string_select),
       //Instruction(ColumnType::String, 10, Operation::Equals, string_select),
 
-      Instruction(ColumnType::String, 0,  Operation::EqualsBitset, string_select),
+      /*Instruction(ColumnType::String, 0,  Operation::EqualsBitset, string_select),
       Instruction(ColumnType::String, 1,  Operation::EqualsBitset, string_select),
       Instruction(ColumnType::String, 2,  Operation::EqualsBitset, string_select),
       Instruction(ColumnType::String, 3,  Operation::EqualsBitset, string_select),
@@ -186,7 +186,13 @@ int main(int argc, char *argv[]) {
       Instruction(ColumnType::Int, 7,  Operation::EqualsBTree, int_select),
       Instruction(ColumnType::Int, 8,  Operation::EqualsBTree, int_select),
       Instruction(ColumnType::Int, 9,  Operation::EqualsBTree, int_select),
-      //Instruction(ColumnType::Int, 10, Operation::EqualsBTree, int_select),
+      //Instruction(ColumnType::Int, 10, Operation::EqualsBTree, int_select),*/
+      Instruction(ColumnType::String, 0,  Operation::LessOrEquals, string_select),
+      Instruction(ColumnType::String, 0,  Operation::LessOrEqualsBitset, string_select),
+      Instruction(ColumnType::String, 0,  Operation::LessOrEqualsDict, string_select),
+      Instruction(ColumnType::String, 0,  Operation::LessOrEqualsDictBitset, string_select),
+      Instruction(ColumnType::String, 0,  Operation::LessOrEqualsIndex, string_select),
+      Instruction(ColumnType::String, 0,  Operation::LessOrEqualsBTree, string_select),
     },
     100 // 1000 runs TODO 100 * 1000?
   };

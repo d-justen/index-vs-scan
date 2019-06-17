@@ -89,18 +89,97 @@ void BenchmarkRunner::execute() {
                                           static_cast<double>(scan.get_result()->size()) / _config.num_rows});
                 break;
             }
+
+            case Operation::LessOrEquals : {
+                Scan scan(_table);
+                const auto start = std::chrono::high_resolution_clock::now();
+                scan.int_leq(index, value);
+                const auto end = std::chrono::high_resolution_clock::now();
+
+                const auto elapsed_microseconds = std::chrono::duration_cast<std::chrono::microseconds>(end - start).count();
+
+                _results.push_back(Result{instruction, _config.num_rows, _config.num_rows * 4, elapsed_microseconds,
+                                          static_cast<double>(scan.get_result()->size()) / _config.num_rows});
+                break;
+            }
+            case Operation::LessOrEqualsBitset : {
+                Scan scan(_table);
+                const auto start = std::chrono::high_resolution_clock::now();
+                scan.int_leq_bitset(index, value);
+                const auto end = std::chrono::high_resolution_clock::now();
+
+                const auto elapsed_microseconds = std::chrono::duration_cast<std::chrono::microseconds>(end - start).count();
+
+                _results.push_back(Result{instruction, _config.num_rows, _config.num_rows * 4, elapsed_microseconds,
+                                          static_cast<double>(_count_results(scan.get_result_bitset())) / _config.num_rows});
+                break;
+            }
+            case Operation::LessOrEqualsDict : {
+                Scan scan(_table);
+                const auto start = std::chrono::high_resolution_clock::now();
+                scan.int_leq_dict(index, value);
+                const auto end = std::chrono::high_resolution_clock::now();
+
+                const auto elapsed_microseconds = std::chrono::duration_cast<std::chrono::microseconds>(end - start).count();
+
+                _results.push_back(Result{instruction, _config.num_rows, _config.num_rows * 4, elapsed_microseconds,
+                                          static_cast<double>(scan.get_result()->size()) / _config.num_rows});
+                break;
+            }
+            case Operation::LessOrEqualsDictBitset : {
+                Scan scan(_table);
+                const auto start = std::chrono::high_resolution_clock::now();
+                scan.int_leq_dict_bitset(index, value);
+                const auto end = std::chrono::high_resolution_clock::now();
+
+                const auto elapsed_microseconds = std::chrono::duration_cast<std::chrono::microseconds>(end - start).count();
+
+                _results.push_back(Result{instruction, _config.num_rows, _config.num_rows * 4, elapsed_microseconds,
+                                          static_cast<double>(_count_results(scan.get_result_bitset())) / _config.num_rows});
+                break;
+            }
+            case Operation::LessOrEqualsIndex : {
+                Scan scan(_table);
+                const auto start = std::chrono::high_resolution_clock::now();
+                scan.int_leq_index(index, value);
+                const auto end = std::chrono::high_resolution_clock::now();
+
+                const auto elapsed_microseconds = std::chrono::duration_cast<std::chrono::microseconds>(end - start).count();
+
+                _results.push_back(Result{instruction, _config.num_rows, _config.num_rows * 4, elapsed_microseconds,
+                                          static_cast<double>(scan.get_result()->size()) / _config.num_rows});
+                break;
+            }
+            case Operation::LessOrEqualsBTree : {
+                Scan scan(_table);
+                const auto start = std::chrono::high_resolution_clock::now();
+                scan.int_leq_tree(index, value);
+                const auto end = std::chrono::high_resolution_clock::now();
+
+                const auto elapsed_microseconds = std::chrono::duration_cast<std::chrono::microseconds>(end - start).count();
+
+                _results.push_back(Result{instruction, _config.num_rows, _config.num_rows * 4, elapsed_microseconds,
+                                          static_cast<double>(scan.get_result()->size()) / _config.num_rows});
+                break;
+            }
           default : std::cout << "Not supported yet.\n";
         }
       }
       else if (column_type == ColumnType::String) {
         const char c = static_cast<char>(value);
         String string_value = {};
-        for (size_t i = 0; i < 10; i++) {
-          if (i < 6) string_value[i] = 'A';
-          else string_value[i] = c;
-        }
+          for(size_t i = 0; i < 10; i++) {
+              if (i < 6) {
+                  string_value[i] = 'A';
+              } else if (i < 9) {
+                  string_value[i] = '^';
+              } else {
+                  string_value[i] = c;
+              }
+          }
 
-        switch (operation) {
+
+          switch (operation) {
           case Operation::Equals : {
             Scan scan(_table);
             const auto start = std::chrono::high_resolution_clock::now();
@@ -165,6 +244,78 @@ void BenchmarkRunner::execute() {
                 Scan scan(_table);
                 const auto start = std::chrono::high_resolution_clock::now();
                 scan.string_eq_tree(index, string_value);
+                const auto end = std::chrono::high_resolution_clock::now();
+
+                const auto elapsed_microseconds = std::chrono::duration_cast<std::chrono::microseconds>(end - start).count();
+
+                _results.push_back(Result{instruction, _config.num_rows, _config.num_rows * 10, elapsed_microseconds,
+                                          static_cast<double>(scan.get_result()->size()) / _config.num_rows});
+                break;
+            }
+            case Operation::LessOrEquals : {
+                Scan scan(_table);
+                const auto start = std::chrono::high_resolution_clock::now();
+                scan.string_leq(index, string_value);
+                const auto end = std::chrono::high_resolution_clock::now();
+
+                const auto elapsed_microseconds = std::chrono::duration_cast<std::chrono::microseconds>(end - start).count();
+
+                _results.push_back(Result{instruction, _config.num_rows, _config.num_rows * 10, elapsed_microseconds,
+                                          static_cast<double>(scan.get_result()->size()) / _config.num_rows});
+                break;
+            }
+            case Operation::LessOrEqualsBitset : {
+                Scan scan(_table);
+                const auto start = std::chrono::high_resolution_clock::now();
+                scan.string_leq_bitset(index, string_value);
+                const auto end = std::chrono::high_resolution_clock::now();
+
+                const auto elapsed_microseconds = std::chrono::duration_cast<std::chrono::microseconds>(end - start).count();
+
+                _results.push_back(Result{instruction, _config.num_rows, _config.num_rows * 10, elapsed_microseconds,
+                                          static_cast<double>(_count_results(scan.get_result_bitset())) / _config.num_rows});
+                break;
+            }
+            case Operation::LessOrEqualsDict : {
+                Scan scan(_table);
+                const auto start = std::chrono::high_resolution_clock::now();
+                scan.string_leq_dict(index, string_value);
+                const auto end = std::chrono::high_resolution_clock::now();
+
+                const auto elapsed_microseconds = std::chrono::duration_cast<std::chrono::microseconds>(end - start).count();
+
+                _results.push_back(Result{instruction, _config.num_rows, _config.num_rows * 10, elapsed_microseconds,
+                                          static_cast<double>(scan.get_result()->size()) / _config.num_rows});
+                break;
+            }
+            case Operation::LessOrEqualsDictBitset : {
+                Scan scan(_table);
+                const auto start = std::chrono::high_resolution_clock::now();
+                scan.string_leq_dict_bitset(index, string_value);
+                const auto end = std::chrono::high_resolution_clock::now();
+
+                const auto elapsed_microseconds = std::chrono::duration_cast<std::chrono::microseconds>(end - start).count();
+
+                _results.push_back(Result{instruction, _config.num_rows, _config.num_rows * 10, elapsed_microseconds,
+                                          static_cast<double>(_count_results(scan.get_result_bitset())) / _config.num_rows});
+                break;
+            }
+            case Operation::LessOrEqualsIndex : {
+                Scan scan(_table);
+                const auto start = std::chrono::high_resolution_clock::now();
+                scan.string_leq_index(index, string_value);
+                const auto end = std::chrono::high_resolution_clock::now();
+
+                const auto elapsed_microseconds = std::chrono::duration_cast<std::chrono::microseconds>(end - start).count();
+
+                _results.push_back(Result{instruction, _config.num_rows, _config.num_rows * 10, elapsed_microseconds,
+                                          static_cast<double>(scan.get_result()->size()) / _config.num_rows});
+                break;
+            }
+            case Operation::LessOrEqualsBTree : {
+                Scan scan(_table);
+                const auto start = std::chrono::high_resolution_clock::now();
+                scan.string_leq_index(index, string_value);
                 const auto end = std::chrono::high_resolution_clock::now();
 
                 const auto elapsed_microseconds = std::chrono::duration_cast<std::chrono::microseconds>(end - start).count();
