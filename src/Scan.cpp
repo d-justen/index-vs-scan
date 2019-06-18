@@ -62,7 +62,7 @@ void Scan::int_eq_dict_bitset(const uint32_t id, const uint32_t value) {
   }
 }
 
-void Scan::int_eq_index(const uint32_t id, const uint32_t value) { //TODO index mit bitset
+void Scan::int_eq_index(const uint32_t id, const uint32_t value) {
   const auto& dict = _table->get_int_dictionary(id);
   const auto& offsets = _table->get_int_offset(id);
   const auto& indizes = _table->get_int_indizes(id);
@@ -76,6 +76,23 @@ void Scan::int_eq_index(const uint32_t id, const uint32_t value) { //TODO index 
   const auto& index_end = indizes.cbegin() + offsets[distance+1];
 
   result_ref.insert(result_ref.cbegin(), index_begin, index_end);
+}
+
+void Scan::int_eq_index_bitset(const uint32_t id, const uint32_t value) {
+  const auto& dict = _table->get_int_dictionary(id);
+  const auto& offsets = _table->get_int_offset(id);
+  const auto& indizes = _table->get_int_indizes(id);
+
+  const auto lower_bound = std::lower_bound(dict.cbegin(), dict.cend(), value);
+  const auto distance = std::distance(dict.cbegin(), lower_bound);
+
+  auto& result_ref = *_result_bitset;
+
+  const auto& index_end = indizes.cbegin() + offsets[distance+1];
+
+  for (auto it = indizes.begin() + offsets[distance]; it != index_end; ++it) {
+    result_ref[*it] = true;
+  }
 }
 
 void Scan::int_eq_tree(const uint32_t id, const uint32_t value) {
@@ -151,6 +168,23 @@ void Scan::string_eq_index(const uint32_t id, const String& value) {
   const auto& index_end = indizes.cbegin() + offsets[distance+1];
 
   result_ref.insert(result_ref.cbegin(), index_begin, index_end);
+}
+
+void Scan::string_eq_index_bitset(const uint32_t id, const String& value) {
+  const auto& dict = _table->get_string_dictionary(id);
+  const auto& offsets = _table->get_string_offset(id);
+  const auto& indizes = _table->get_string_indizes(id);
+
+  const auto lower_bound = std::lower_bound(dict.cbegin(), dict.cend(), value);
+  const auto distance = std::distance(dict.cbegin(), lower_bound);
+
+  auto& result_ref = *_result_bitset;
+
+  const auto& index_end = indizes.cbegin() + offsets[distance+1];
+
+  for (auto it = indizes.begin() + offsets[distance]; it != index_end; ++it) {
+    result_ref[*it] = true;
+  }
 }
 
 void Scan::string_eq_tree(const uint32_t id, const String& value) {
