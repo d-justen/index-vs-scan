@@ -15,7 +15,7 @@ Scan::Scan(const std::shared_ptr<Table> table) : _table(table),
   _result_bitset->reserve(TABLE_LENGTH);
 }
 
-void Scan::int_eq(const uint32_t id, const uint32_t value) {
+void Scan::int_eq(const uint32_t id, const uint8_t value) {
   const auto& column = _table->get_int_column(id);
 
   auto& result_ref = *_result;
@@ -25,7 +25,7 @@ void Scan::int_eq(const uint32_t id, const uint32_t value) {
   }
 }
 
-void Scan::int_leq(uint32_t id, uint32_t value) {
+void Scan::int_leq(uint32_t id, uint8_t value) {
     const auto& column = _table->get_int_column(id);
 
     auto& result_ref = *_result;
@@ -35,7 +35,7 @@ void Scan::int_leq(uint32_t id, uint32_t value) {
     }
 }
 
-void Scan::int_eq_bitset(const uint32_t id, const uint32_t value) {
+void Scan::int_eq_bitset(const uint32_t id, const uint8_t value) {
   const auto& column = _table->get_int_column(id);
 
   auto& result_ref = *_result_bitset;
@@ -45,7 +45,7 @@ void Scan::int_eq_bitset(const uint32_t id, const uint32_t value) {
   }
 }
 
-void Scan::int_leq_bitset(const uint32_t id, const uint32_t value) {
+void Scan::int_leq_bitset(const uint32_t id, const uint8_t value) {
     const auto& column = _table->get_int_column(id);
 
     auto& result_ref = *_result_bitset;
@@ -55,7 +55,7 @@ void Scan::int_leq_bitset(const uint32_t id, const uint32_t value) {
     }
 }
 
-void Scan::int_eq_dict(const uint32_t id, const uint32_t value) {
+void Scan::int_eq_dict(const uint32_t id, const uint8_t value) {
   const auto& dict = _table->get_int_dictionary(id);
   const auto& av = _table->get_int_attribute_vector(id);
 
@@ -69,7 +69,7 @@ void Scan::int_eq_dict(const uint32_t id, const uint32_t value) {
   }
 }
 
-void Scan::int_leq_dict(const uint32_t id, const uint32_t value) {
+void Scan::int_leq_dict(const uint32_t id, const uint8_t value) {
     const auto& dict = _table->get_int_dictionary(id);
     const auto& av = _table->get_int_attribute_vector(id);
 
@@ -83,7 +83,7 @@ void Scan::int_leq_dict(const uint32_t id, const uint32_t value) {
     }
 }
 
-void Scan::int_eq_dict_bitset(const uint32_t id, const uint32_t value) {
+void Scan::int_eq_dict_bitset(const uint32_t id, const uint8_t value) {
   const auto& dict = _table->get_int_dictionary(id);
   const auto& av = _table->get_int_attribute_vector(id);
 
@@ -97,7 +97,7 @@ void Scan::int_eq_dict_bitset(const uint32_t id, const uint32_t value) {
   }
 }
 
-void Scan::int_leq_dict_bitset(const uint32_t id, const uint32_t value) {
+void Scan::int_leq_dict_bitset(const uint32_t id, const uint8_t value) {
     const auto& dict = _table->get_int_dictionary(id);
     const auto& av = _table->get_int_attribute_vector(id);
 
@@ -111,7 +111,7 @@ void Scan::int_leq_dict_bitset(const uint32_t id, const uint32_t value) {
     }
 }
 
-void Scan::int_eq_index(const uint32_t id, const uint32_t value) { //TODO index mit bitset
+void Scan::int_eq_index(const uint32_t id, const uint8_t value) { //TODO index mit bitset
   const auto& dict = _table->get_int_dictionary(id);
   const auto& offsets = _table->get_int_offset(id);
   const auto& indizes = _table->get_int_indizes(id);
@@ -127,7 +127,7 @@ void Scan::int_eq_index(const uint32_t id, const uint32_t value) { //TODO index 
   result_ref.insert(result_ref.cbegin(), index_begin, index_end);
 }
 
-void Scan::int_leq_index(const uint32_t id, const uint32_t value) { //TODO index mit bitset
+void Scan::int_leq_index(const uint32_t id, const uint8_t value) { //TODO index mit bitset
     const auto& dict = _table->get_int_dictionary(id);
     const auto& offsets = _table->get_int_offset(id);
     const auto& indizes = _table->get_int_indizes(id);
@@ -143,7 +143,7 @@ void Scan::int_leq_index(const uint32_t id, const uint32_t value) { //TODO index
     result_ref.insert(result_ref.cbegin(), index_begin, index_end);
 }
 
-void Scan::int_eq_tree(const uint32_t id, const uint32_t value) {
+void Scan::int_eq_tree(const uint32_t id, const uint8_t value) {
     const auto& tree = _table->get_int_tree(id);
     const auto results = tree.equal_range(value);
     auto& result_ref = *_result;
@@ -154,7 +154,7 @@ void Scan::int_eq_tree(const uint32_t id, const uint32_t value) {
 
 }
 
-void Scan::int_leq_tree(const uint32_t id, const uint32_t value) {
+void Scan::int_leq_tree(const uint32_t id, const uint8_t value) {
     const auto& tree = _table->get_int_tree(id);
     const auto results = tree.equal_range(value);
     auto& result_ref = *_result;

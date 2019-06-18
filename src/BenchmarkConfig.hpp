@@ -15,7 +15,7 @@ enum class OperationType { Equals, LessOrEquals };
 
 using ValueCount = uint32_t;
 using Selectivity = double;
-using Value = uint32_t;
+using Value = uint8_t;
 using ColumnDefinition = std::tuple<ColumnType, ValueCount, OperationType , Selectivity, Value>;
 
 // 1. Which column type 2. Index of column 3. which operation 4. value to compare

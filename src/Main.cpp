@@ -12,48 +12,48 @@ using namespace indexvsscan;
 
 int main(int argc, char *argv[]) {
     std::mt19937 generator(1337);
-    std::uniform_int_distribution<uint32_t> int_dist((UINT32_MAX / 2) - 1000, (UINT32_MAX / 2) + 1000);
-    std::uniform_int_distribution<uint32_t> string_dist(90, 96);
-    uint32_t int_select = int_dist(generator);
-    uint32_t string_select = string_dist(generator);
+    std::uniform_int_distribution<uint8_t> int_dist((UINT8_MAX / 2) - 2, (UINT8_MAX / 2) + 2);
+    std::uniform_int_distribution<uint8_t> string_dist(90, 96);
+    uint8_t int_select = int_dist(generator);
+    uint8_t string_select = string_dist(generator);
 
 
   const BenchmarkConfig config {
     TABLE_LENGTH,  // Table length muss zur compile time bekannt sein, weil größe der bitsets zur compile time bekannt sein muss
     {
-      ColumnDefinition(ColumnType::String, 10'000'000, OperationType::LessOrEquals, 0.05,  string_select),
-      ColumnDefinition(ColumnType::String, 10'000'000, OperationType::LessOrEquals, 0.075, string_select),
-      ColumnDefinition(ColumnType::String, 10'000'000, OperationType::LessOrEquals, 0.1,   string_select),  // Make one StringColumn with 5 distinct values and selectivity 0.2
-      ColumnDefinition(ColumnType::String, 10'000'000, OperationType::LessOrEquals, 0.125, string_select),
-      ColumnDefinition(ColumnType::String, 10'000'000, OperationType::LessOrEquals, 0.15,  string_select),
-      ColumnDefinition(ColumnType::String, 10'000'000, OperationType::LessOrEquals, 0.2,   string_select),
-      ColumnDefinition(ColumnType::String, 10'000'000, OperationType::LessOrEquals, 0.25,  string_select),
-      ColumnDefinition(ColumnType::String, 10'000'000, OperationType::LessOrEquals, 0.3,   string_select),
-      ColumnDefinition(ColumnType::String, 10'000'000, OperationType::LessOrEquals, 0.4,   string_select),
-      ColumnDefinition(ColumnType::String, 10'000'000, OperationType::LessOrEquals, 0.45,  string_select),
-      ColumnDefinition(ColumnType::String, 10'000'000, OperationType::LessOrEquals, 0.5,   string_select),
-      ColumnDefinition(ColumnType::String, 10'000'000, OperationType::LessOrEquals, 0.55,  string_select),
-      ColumnDefinition(ColumnType::String, 10'000'000, OperationType::LessOrEquals, 0.6,   string_select),
-      ColumnDefinition(ColumnType::String, 10'000'000, OperationType::LessOrEquals, 0.8,   string_select),
-      ColumnDefinition(ColumnType::String, 10'000'000, OperationType::LessOrEquals, 0.9,   string_select),
-      ColumnDefinition(ColumnType::String, 10'000'000, OperationType::LessOrEquals, 0.95,  string_select),
+      ColumnDefinition(ColumnType::String, 100, OperationType::LessOrEquals, 0.05,  string_select),
+      ColumnDefinition(ColumnType::String, 100, OperationType::LessOrEquals, 0.075, string_select),
+      ColumnDefinition(ColumnType::String, 100, OperationType::LessOrEquals, 0.1,   string_select),  // Make one StringColumn with 5 distinct values and selectivity 0.2
+      ColumnDefinition(ColumnType::String, 100, OperationType::LessOrEquals, 0.125, string_select),
+      ColumnDefinition(ColumnType::String, 100, OperationType::LessOrEquals, 0.15,  string_select),
+      ColumnDefinition(ColumnType::String, 100, OperationType::LessOrEquals, 0.2,   string_select),
+      ColumnDefinition(ColumnType::String, 100, OperationType::LessOrEquals, 0.25,  string_select),
+      ColumnDefinition(ColumnType::String, 100, OperationType::LessOrEquals, 0.3,   string_select),
+      ColumnDefinition(ColumnType::String, 100, OperationType::LessOrEquals, 0.4,   string_select),
+      ColumnDefinition(ColumnType::String, 100, OperationType::LessOrEquals, 0.45,  string_select),
+      ColumnDefinition(ColumnType::String, 100, OperationType::LessOrEquals, 0.5,   string_select),
+      ColumnDefinition(ColumnType::String, 100, OperationType::LessOrEquals, 0.55,  string_select),
+      ColumnDefinition(ColumnType::String, 100, OperationType::LessOrEquals, 0.6,   string_select),
+      ColumnDefinition(ColumnType::String, 100, OperationType::LessOrEquals, 0.8,   string_select),
+      ColumnDefinition(ColumnType::String, 100, OperationType::LessOrEquals, 0.9,   string_select),
+      ColumnDefinition(ColumnType::String, 100, OperationType::LessOrEquals, 0.95,  string_select),
 
-      /*ColumnDefinition(ColumnType::Int, 10'000'000, OperationType::LessOrEquals, 0.05,  int_select),
-      ColumnDefinition(ColumnType::Int, 10'000'000, OperationType::LessOrEquals, 0.075, int_select),
-      ColumnDefinition(ColumnType::Int, 10'000'000, OperationType::LessOrEquals, 0.1,   int_select),  // Make one StringColumn with 5 distinct values and selectivity 0.2
-      ColumnDefinition(ColumnType::Int, 10'000'000, OperationType::LessOrEquals, 0.125, int_select),
-      ColumnDefinition(ColumnType::Int, 10'000'000, OperationType::LessOrEquals, 0.15,  int_select),
-      ColumnDefinition(ColumnType::Int, 10'000'000, OperationType::LessOrEquals, 0.2,   int_select),
-      ColumnDefinition(ColumnType::Int, 10'000'000, OperationType::LessOrEquals, 0.25,  int_select),
-      ColumnDefinition(ColumnType::Int, 10'000'000, OperationType::LessOrEquals, 0.3,   int_select),
-      ColumnDefinition(ColumnType::Int, 10'000'000, OperationType::LessOrEquals, 0.4,   int_select),
-      ColumnDefinition(ColumnType::Int, 10'000'000, OperationType::LessOrEquals, 0.45,  int_select),
-      ColumnDefinition(ColumnType::Int, 10'000'000, OperationType::LessOrEquals, 0.5,   int_select),
-      ColumnDefinition(ColumnType::Int, 10'000'000, OperationType::LessOrEquals, 0.55,  int_select),
-      ColumnDefinition(ColumnType::Int, 10'000'000, OperationType::LessOrEquals, 0.6,   int_select),
-      ColumnDefinition(ColumnType::Int, 10'000'000, OperationType::LessOrEquals, 0.8,   int_select),
-      ColumnDefinition(ColumnType::Int, 10'000'000, OperationType::LessOrEquals, 0.9,   int_select),
-      ColumnDefinition(ColumnType::Int, 10'000'000, OperationType::LessOrEquals, 0.95,  int_select),*/
+      /*ColumnDefinition(ColumnType::Int, 100, OperationType::LessOrEquals, 0.05,  int_select),
+      ColumnDefinition(ColumnType::Int, 100, OperationType::LessOrEquals, 0.075, int_select),
+      ColumnDefinition(ColumnType::Int, 100, OperationType::LessOrEquals, 0.1,   int_select),  // Make one StringColumn with 5 distinct values and selectivity 0.2
+      ColumnDefinition(ColumnType::Int, 100, OperationType::LessOrEquals, 0.125, int_select),
+      ColumnDefinition(ColumnType::Int, 100, OperationType::LessOrEquals, 0.15,  int_select),
+      ColumnDefinition(ColumnType::Int, 100, OperationType::LessOrEquals, 0.2,   int_select),
+      ColumnDefinition(ColumnType::Int, 100, OperationType::LessOrEquals, 0.25,  int_select),
+      ColumnDefinition(ColumnType::Int, 100, OperationType::LessOrEquals, 0.3,   int_select),
+      ColumnDefinition(ColumnType::Int, 100, OperationType::LessOrEquals, 0.4,   int_select),
+      ColumnDefinition(ColumnType::Int, 100, OperationType::LessOrEquals, 0.45,  int_select),
+      ColumnDefinition(ColumnType::Int, 100, OperationType::LessOrEquals, 0.5,   int_select),
+      ColumnDefinition(ColumnType::Int, 100, OperationType::LessOrEquals, 0.55,  int_select),
+      ColumnDefinition(ColumnType::Int, 100, OperationType::LessOrEquals, 0.6,   int_select),
+      ColumnDefinition(ColumnType::Int, 100, OperationType::LessOrEquals, 0.8,   int_select),
+      ColumnDefinition(ColumnType::Int, 100, OperationType::LessOrEquals, 0.9,   int_select),
+      ColumnDefinition(ColumnType::Int, 100, OperationType::LessOrEquals, 0.95,  int_select),*/
 
     },
     {

@@ -15,12 +15,12 @@ class Scan {
  public:
   Scan(const std::shared_ptr<Table> table);
 
-  void int_eq(uint32_t id, uint32_t value);
-  void int_eq_bitset(uint32_t id, uint32_t value);
-  void int_eq_dict(uint32_t id, uint32_t value);
-  void int_eq_dict_bitset(uint32_t id, uint32_t value);
-  void int_eq_index(uint32_t id, uint32_t value);
-  void int_eq_tree(uint32_t id, uint32_t value);
+  void int_eq(uint32_t id, uint8_t value);
+  void int_eq_bitset(uint32_t id, uint8_t value);
+  void int_eq_dict(uint32_t id, uint8_t value);
+  void int_eq_dict_bitset(uint32_t id, uint8_t value);
+  void int_eq_index(uint32_t id, uint8_t value);
+  void int_eq_tree(uint32_t id, uint8_t value);
 
   void string_eq(uint32_t id, const String& value);
   void string_eq_bitset(uint32_t id, const String& value);
@@ -29,12 +29,12 @@ class Scan {
   void string_eq_index(uint32_t id, const String& value);
   void string_eq_tree(uint32_t id, const String& value);
 
-  void int_leq(uint32_t id, uint32_t value);
-  void int_leq_bitset(uint32_t id, uint32_t value);
-  void int_leq_dict(uint32_t id, uint32_t value);
-  void int_leq_dict_bitset(uint32_t id, uint32_t value);
-  void int_leq_index(uint32_t id, uint32_t value);
-  void int_leq_tree(uint32_t id, uint32_t value);
+  void int_leq(uint32_t id, uint8_t value);
+  void int_leq_bitset(uint32_t id, uint8_t value);
+  void int_leq_dict(uint32_t id, uint8_t value);
+  void int_leq_dict_bitset(uint32_t id, uint8_t value);
+  void int_leq_index(uint32_t id, uint8_t value);
+  void int_leq_tree(uint32_t id, uint8_t value);
 
   void string_leq(uint32_t id, const String& value);
   void string_leq_bitset(uint32_t id, const String& value);

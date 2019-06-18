@@ -49,8 +49,8 @@ void Table::_make_column(const ColumnType type, const size_t num_rows) {
     if (!_int_dictionaries) {
       _int_dictionaries = std::make_shared<std::vector<IntColumn>>();
       _int_avs = std::make_shared<std::vector<IntColumn>>();
-      _int_offsets = std::make_shared<std::vector<IntColumn>>();
-      _int_indizes = std::make_shared<std::vector<IntColumn>>();
+      _int_offsets = std::make_shared<std::vector<std::vector<uint32_t>>>();
+      _int_indizes = std::make_shared<std::vector<std::vector<uint32_t>>>();
     }
 
     if (!_int_trees) {
@@ -63,8 +63,8 @@ void Table::_make_column(const ColumnType type, const size_t num_rows) {
 
     _int_dictionaries->emplace_back(IntColumn());
     _int_avs->emplace_back(IntColumn());
-    _int_offsets->emplace_back(IntColumn());
-    _int_indizes->emplace_back(IntColumn());
+    _int_offsets->emplace_back(std::vector<uint32_t>());
+    _int_indizes->emplace_back(std::vector<uint32_t>());
     _int_trees->emplace_back(IntTree());
   }
   else if (type == ColumnType::String) {
@@ -73,8 +73,8 @@ void Table::_make_column(const ColumnType type, const size_t num_rows) {
     if (!_string_dictionaries) {
       _string_dictionaries = std::make_shared<std::vector<StringColumn>>();
       _string_avs = std::make_shared<std::vector<IntColumn>>();
-      _string_offsets = std::make_shared<std::vector<IntColumn>>();
-      _string_indizes = std::make_shared<std::vector<IntColumn>>();
+      _string_offsets = std::make_shared<std::vector<std::vector<uint32_t>>>();
+      _string_indizes = std::make_shared<std::vector<std::vector<uint32_t>>>();
     }
 
     if (!_string_trees) {
@@ -87,19 +87,19 @@ void Table::_make_column(const ColumnType type, const size_t num_rows) {
 
     _string_dictionaries->emplace_back(StringColumn());
     _string_avs->emplace_back(IntColumn());
-    _string_offsets->emplace_back(IntColumn());
-    _string_indizes->emplace_back(IntColumn());
+    _string_offsets->emplace_back(std::vector<uint32_t>());
+    _string_indizes->emplace_back(std::vector<uint32_t>());
     _string_trees->emplace_back(StringTree());
   }
 }
 
 void Table::_fill_int_column(const size_t index, const uint32_t value_count, OperationType operation_type,
-        double selectivity, const uint32_t num_rows, const uint32_t value) {
+        double selectivity, const uint32_t num_rows, const uint8_t value) {
 
   std::mt19937 generator(1337);
-  auto num_selected_value = static_cast<uint32_t >(selectivity * num_rows);
-  std::vector<uint32_t> values;
-  uint32_t current_value = 0;
+  auto num_selected_value = static_cast<uint32_t>(selectivity * num_rows);
+  std::vector<uint8_t> values;
+  uint8_t current_value = 0;
 
   switch (operation_type) {
       case OperationType::Equals : {
@@ -121,9 +121,9 @@ void Table::_fill_int_column(const size_t index, const uint32_t value_count, Ope
       }
 
       case OperationType::LessOrEquals : {
-          std::vector<uint32_t> greater_values;
+          std::vector<uint8_t> greater_values;
           values.push_back(value);
-          greater_values.push_back(UINT32_MAX);
+          greater_values.push_back(UINT8_MAX);
           while (values.size() < std::min(value_count - 1, num_selected_value)) {
               if (current_value >= value) {
                   break;
@@ -132,7 +132,7 @@ void Table::_fill_int_column(const size_t index, const uint32_t value_count, Ope
               current_value++;
           }
 
-          current_value = UINT32_MAX;
+          current_value = UINT8_MAX;
           while (greater_values.size() + values.size() < value_count) {
               current_value--;
               greater_values.push_back(current_value);
@@ -157,10 +157,10 @@ void Table::_fill_int_column(const size_t index, const uint32_t value_count, Ope
   std::shuffle((*_int_columns)[index].begin(), (*_int_columns)[index].end(), generator);
 
   // Map column values to their positions
-  std::map<uint32_t, std::vector<uint32_t>> map;
+  std::map<uint8_t, std::vector<uint32_t>> map;
 
   for (uint32_t i = 0; i< (*_int_columns)[index].size(); i++) {
-    uint32_t val = (*_int_columns)[index][i];
+    uint8_t val = (*_int_columns)[index][i];
 
     if (map.find(val) != map.cend()) {
       map[val].push_back(i);
@@ -192,7 +192,7 @@ void Table::_fill_int_column(const size_t index, const uint32_t value_count, Ope
 }
 
 void Table::_fill_string_column(const size_t index, const uint32_t value_count, OperationType operation_type,
-        const double selectivity, const uint32_t num_rows, const uint32_t value) {
+        const double selectivity, const uint32_t num_rows, const uint8_t value) {
     std::mt19937 generator(1337);
 
 
