@@ -11,7 +11,7 @@
 namespace indexvsscan {
 
 Table::Table(const BenchmarkConfig& config) : num_rows(config.num_rows){ //TODO schneller -> map die vektor speichert
-  std::cout << "### Create table: " << config.column_definitions.size() << " colums, " << config.num_rows
+  std::cout << "### Create table: " << config.column_definitions.size() << " columns, " << config.num_rows
   << " random rows ###\n";
 
   const auto start = std::chrono::steady_clock::now();
