@@ -406,7 +406,7 @@ int main(int argc, char *argv[]) {
       Instruction(ColumnType::Int, 15, Operation::LessOrEqualsBTree, int_select),*/
 
 },
-100 // 1000 runs TODO 100 * 1000?
+1000 // 1000 runs TODO 100 * 1000?
 };
 const auto table = std::make_shared<Table>(config);
 BenchmarkRunner runner(config, table);

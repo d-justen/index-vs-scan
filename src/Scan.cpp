@@ -275,7 +275,8 @@ void Scan::string_eq_index(const uint32_t id, const String& value) {
 
   const auto& index_begin = indizes.cbegin() + offsets[distance];
   const auto& index_end = indizes.cbegin() + offsets[distance+1];
-
+//TODO resize, dann direktzugriff
+//TODO memcopy, billoschleife, index mit bitset mergen und plotten, mit mehreren threads auszuführen (8-n)
   result_ref.insert(result_ref.cbegin(), index_begin, index_end);
 }
 

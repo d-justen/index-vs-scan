@@ -2,6 +2,7 @@
 #define SRC_BENCHMARKRUNNER_HPP_
 
 #include <memory>
+#include <mutex>
 
 #include "BenchmarkConfig.hpp"
 #include "Table.hpp"
@@ -16,13 +17,16 @@ class BenchmarkRunner {
   void execute();
 
  private:
+  void _run_instruction(const Instruction& instruction);
   size_t _count_results(const std::shared_ptr<std::vector<bool>> vec) const;
+  void _append_result(const Result& result);
   void _print_results();
 
   const BenchmarkConfig _config;
   const std::shared_ptr<Table> _table;
 
   std::vector<Result> _results;
+  std::mutex _results_mutex;
 };
 
 }  // namespace indexvsscan
