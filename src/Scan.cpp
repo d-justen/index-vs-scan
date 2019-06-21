@@ -10,8 +10,9 @@ namespace indexvsscan {
 
 Scan::Scan(const std::shared_ptr<Table> table) : _table(table),
                                                  _result(std::make_shared<std::vector<uint32_t>>()),
-                                                 _result_bitset(std::make_shared<std::vector<bool>>()) {
-  _result->reserve(table->num_rows);
+                                                 _result_bitset(std::make_shared<std::vector<bool>>()),
+                                                 _result_bitset_init(std::make_shared<std::vector<bool>>(TABLE_LENGTH)){
+  _result->reserve(TABLE_LENGTH);
   _result_bitset->reserve(TABLE_LENGTH);
 }
 
@@ -111,7 +112,7 @@ void Scan::int_leq_dict_bitset(const uint32_t id, const uint32_t value) {
     }
 }
 
-void Scan::int_eq_index(const uint32_t id, const uint32_t value) { //TODO index mit bitset
+void Scan::int_eq_index(const uint32_t id, const uint32_t value) {
   const auto& dict = _table->get_int_dictionary(id);
   const auto& offsets = _table->get_int_offset(id);
   const auto& indizes = _table->get_int_indizes(id);
@@ -127,7 +128,25 @@ void Scan::int_eq_index(const uint32_t id, const uint32_t value) { //TODO index 
   result_ref.insert(result_ref.cbegin(), index_begin, index_end);
 }
 
-void Scan::int_leq_index(const uint32_t id, const uint32_t value) { //TODO index mit bitset
+void Scan::int_eq_index_bitset(const uint32_t id, const uint32_t value) {
+  const auto& dict = _table->get_int_dictionary(id);
+  const auto& offsets = _table->get_int_offset(id);
+  const auto& indizes = _table->get_int_indizes(id);
+
+  const auto lower_bound = std::lower_bound(dict.cbegin(), dict.cend(), value);
+  const auto distance = std::distance(dict.cbegin(), lower_bound);
+
+  auto& result_ref = *_result_bitset_init;
+
+  auto it = indizes.begin() + offsets[distance];
+  const auto& index_end = indizes.cbegin() + offsets[distance+1];
+
+  for (; it != index_end; ++it) {
+    result_ref[*it] = true;
+  }
+}
+
+void Scan::int_leq_index(const uint32_t id, const uint32_t value) {
     const auto& dict = _table->get_int_dictionary(id);
     const auto& offsets = _table->get_int_offset(id);
     const auto& indizes = _table->get_int_indizes(id);
@@ -141,6 +160,24 @@ void Scan::int_leq_index(const uint32_t id, const uint32_t value) { //TODO index
     const auto& index_end = indizes.cbegin() + offsets[distance+1];
 
     result_ref.insert(result_ref.cbegin(), index_begin, index_end);
+}
+
+void Scan::int_leq_index_bitset(const uint32_t id, const uint32_t value) {
+  const auto& dict = _table->get_int_dictionary(id);
+  const auto& offsets = _table->get_int_offset(id);
+  const auto& indizes = _table->get_int_indizes(id);
+
+  const auto lower_bound = std::lower_bound(dict.cbegin(), dict.cend(), value);
+  const auto distance = std::distance(dict.cbegin(), lower_bound);
+
+  auto& result_ref = *_result_bitset_init;
+
+  auto it = indizes.begin() + offsets[distance];
+  const auto& index_end = indizes.cbegin() + offsets[distance+1];
+
+  for (; it != index_end; ++it) {
+    result_ref[*it] = true;
+  }
 }
 
 void Scan::int_eq_tree(const uint32_t id, const uint32_t value) {
@@ -276,8 +313,26 @@ void Scan::string_eq_index(const uint32_t id, const String& value) {
   const auto& index_begin = indizes.cbegin() + offsets[distance];
   const auto& index_end = indizes.cbegin() + offsets[distance+1];
 //TODO resize, dann direktzugriff
-//TODO memcopy, billoschleife, index mit bitset mergen und plotten, mit mehreren threads auszuführen (8-n)
+//TODO memcopy, billoschleife, index mit bitset mergen und plotten
   result_ref.insert(result_ref.cbegin(), index_begin, index_end);
+}
+
+void Scan::string_eq_index_bitset(const uint32_t id, const String& value) {
+  const auto& dict = _table->get_string_dictionary(id);
+  const auto& offsets = _table->get_string_offset(id);
+  const auto& indizes = _table->get_string_indizes(id);
+
+  const auto lower_bound = std::lower_bound(dict.cbegin(), dict.cend(), value);
+  const auto distance = std::distance(dict.cbegin(), lower_bound);
+
+  auto& result_ref = *_result_bitset_init;
+
+  auto it = indizes.begin() + offsets[distance];
+  const auto& index_end = indizes.cbegin() + offsets[distance+1];
+
+  for (; it != index_end; ++it) {
+    result_ref[*it] = true;
+  }
 }
 
 void Scan::string_leq_index(const uint32_t id, const String& value) {
@@ -296,6 +351,24 @@ void Scan::string_leq_index(const uint32_t id, const String& value) {
     result_ref.insert(result_ref.cbegin(), index_begin, index_end);
 }
 
+void Scan::string_leq_index_bitset(const uint32_t id, const String& value) {
+  const auto& dict = _table->get_string_dictionary(id);
+  const auto& offsets = _table->get_string_offset(id);
+  const auto& indizes = _table->get_string_indizes(id);
+
+  const auto lower_bound = std::lower_bound(dict.cbegin(), dict.cend(), value);
+  const auto distance = std::distance(dict.cbegin(), lower_bound);
+
+  auto& result_ref = *_result_bitset_init;
+
+  auto it = indizes.begin() + offsets[distance];
+  const auto& index_end = indizes.cbegin() + offsets[distance+1];
+
+  for (; it != index_end; ++it) {
+    result_ref[*it] = true;
+  }
+}
+
 void Scan::string_eq_tree(const uint32_t id, const String& value) {
     const auto& tree = _table->get_string_tree(id);
     const auto& results = tree.equal_range(value);
@@ -311,11 +384,17 @@ void Scan::string_leq_tree(const uint32_t id, const String& value) {
     const auto& results = tree.equal_range(value);
     auto& result_ref = *_result;
 
-    for (auto it=tree.begin(); it!=results.second; it.increment()) {
+    for (auto it=tree.begin(); it != results.second; it.increment()) {
         result_ref.push_back((*it).second);
     }
 }
 
-
+const std::shared_ptr<std::vector<bool>> Scan::get_result_bitset() {
+  if (std::find(_result_bitset_init->cbegin(), _result_bitset_init->cend(), true) != _result_bitset_init->cend()) {
+    return _result_bitset_init;
+  } else {
+    return _result_bitset;
+  }
+}
 
 }  // namespace indexvsscan
