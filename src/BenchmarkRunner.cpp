@@ -369,7 +369,7 @@ void BenchmarkRunner::_run_instruction(const Instruction& instruction) {
         const auto start = std::chrono::high_resolution_clock::now();
         scan.string_leq_index_bitset(index, string_value);
         const auto end = std::chrono::high_resolution_clock::now();
-
+        const auto cnt = _count_results(scan.get_result_bitset());
         const auto elapsed_microseconds = std::chrono::duration_cast<std::chrono::microseconds>(end - start).count();
 
         _append_result(Result{instruction, _config.num_rows, _config.num_rows * 10, elapsed_microseconds,
