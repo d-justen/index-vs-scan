@@ -172,7 +172,7 @@ void Scan::int_leq_index_bitset(const uint32_t id, const uint32_t value) {
 
   auto& result_ref = *_result_bitset_init;
 
-  auto it = indizes.begin() + offsets[distance];
+  auto it = indizes.begin();
   const auto& index_end = indizes.cbegin() + offsets[distance+1];
 
   for (; it != index_end; ++it) {
@@ -361,7 +361,7 @@ void Scan::string_leq_index_bitset(const uint32_t id, const String& value) {
 
   auto& result_ref = *_result_bitset_init;
 
-  auto it = indizes.begin() + offsets[distance];
+  auto it = indizes.begin();
   const auto& index_end = indizes.cbegin() + offsets[distance+1];
 
   for (; it != index_end; ++it) {
