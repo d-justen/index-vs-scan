@@ -7,6 +7,7 @@
 namespace indexvsscan {
 
 constexpr uint32_t TABLE_LENGTH = 1'000'000;
+const bool MULTITHREADING = false;
 
 enum class ColumnType { Int, String };
 enum class Operation {

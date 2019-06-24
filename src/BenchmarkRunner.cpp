@@ -11,19 +11,28 @@
 namespace indexvsscan {
 
 void BenchmarkRunner::execute() {
-  const auto run_instruction = [&] (const Instruction& instruction) {
+  const auto run_instruction = [&](const Instruction &instruction) {
     _run_instruction(instruction);
   };
 
-  for (size_t i = 0; i < _config.num_runs; i++) {
+  if (MULTITHREADING) {
+    for (size_t i = 0; i < _config.num_runs; i++) {
+      std::vector<std::thread> threads{};
 
-    std::vector<std::thread> threads{};
-    for (const auto &instruction : _config.instructions) {
-      threads.emplace_back(std::thread(run_instruction, instruction));
+      for (const auto &instruction : _config.instructions) {
+        threads.emplace_back(std::thread(run_instruction, instruction));
+      }
+
+      for (auto &t : threads) {
+        t.join();
+      }
     }
-
-    for (auto& t : threads) {
-      t.join();
+  }
+  else {
+    for (size_t i = 0; i < _config.num_runs; i++) {
+      for (const auto &instruction : _config.instructions) {
+        _run_instruction(instruction);
+      }
     }
     _print_results();
   }
