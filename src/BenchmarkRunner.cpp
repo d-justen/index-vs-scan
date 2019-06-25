@@ -393,9 +393,9 @@ void BenchmarkRunner::_run_instruction(const Instruction& instruction) {
   }
 }
 
-size_t BenchmarkRunner::_count_results(const std::shared_ptr<std::vector<bool>> vec) const {
+size_t BenchmarkRunner::_count_results(const std::shared_ptr<std::vector<uint8_t >> vec) const {
   size_t count = 0;
-  for (const auto& b : *vec) if (b) count++;
+  for (const auto& b : *vec) if (b == 1) count++;
   return count;
 }
 

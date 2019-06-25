@@ -18,7 +18,7 @@ class BenchmarkRunner {
 
  private:
   void _run_instruction(const Instruction& instruction);
-  size_t _count_results(const std::shared_ptr<std::vector<bool>> vec) const;
+  size_t _count_results(const std::shared_ptr<std::vector<uint8_t >> vec) const;
   void _append_result(const Result& result);
   void _print_results();
 
