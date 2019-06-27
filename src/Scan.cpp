@@ -10,10 +10,10 @@ namespace indexvsscan {
 
 Scan::Scan(const std::shared_ptr<Table> table) : _table(table),
                                                  _result(std::make_shared<std::vector<uint32_t>>()),
-                                                 _result_bitset(std::make_shared<std::vector<bool>>()),
-                                                 _result_bitset_init(std::make_shared<std::vector<bool>>(TABLE_LENGTH)){
-  _result->reserve(TABLE_LENGTH);
-  _result_bitset->reserve(TABLE_LENGTH);
+                                                 _result_bitset(std::make_shared<std::vector<char>>()),
+                                                 _result_bitset_init(std::make_shared<std::vector<char>>(table->num_rows)){
+  _result->reserve(table->num_rows);
+  _result_bitset->reserve(table->num_rows);
 }
 
 void Scan::int_eq(const uint32_t id, const uint32_t value) {
@@ -105,10 +105,10 @@ void Scan::int_leq_dict_bitset(const uint32_t id, const uint32_t value) {
     const auto lower_bound = std::lower_bound(dict.cbegin(), dict.cend(), value);
     const auto distance = std::distance(dict.cbegin(), lower_bound);
 
-    auto& result_ref = *_result_bitset;
+    auto& result_ref = *_result_bitset_init;
 
     for (uint32_t i = 0; i  < av.size(); i++) {
-        result_ref.push_back(av[i] <= distance);
+        result_ref[i] = av[i] <= distance;
     }
 }
 
@@ -236,10 +236,10 @@ void Scan::string_eq_bitset(const uint32_t id, const String& value) {
 void Scan::string_leq_bitset(const uint32_t id, const String& value) {
     const auto& column = _table->get_string_column(id);
 
-    auto& result_ref = *_result_bitset;
+    auto& result_ref = *_result_bitset_init;
 
     for (uint32_t i = 0; i < column.size(); i++) {
-        result_ref.push_back(column[i] <= value);
+        result_ref[i] = column[i] <= value;
     }
 }
 
@@ -293,10 +293,10 @@ void Scan::string_leq_dict_bitset(const uint32_t id, const String& value) {
     const auto lower_bound = std::lower_bound(dict.cbegin(), dict.cend(), value);
     const auto distance = std::distance(dict.cbegin(), lower_bound);
 
-    auto& result_ref = *_result_bitset;
+    auto& result_ref = *_result_bitset_init;
 
     for (uint32_t i = 0; i  < av.size(); i++) {
-        result_ref.push_back(av[i] <= distance);
+        result_ref[i] = av[i] <= distance;
     }
 }
 
@@ -389,8 +389,9 @@ void Scan::string_leq_tree(const uint32_t id, const String& value) {
     }
 }
 
-const std::shared_ptr<std::vector<bool>> Scan::get_result_bitset() {
-  if (std::find(_result_bitset_init->cbegin(), _result_bitset_init->cend(), true) != _result_bitset_init->cend()) {
+const std::shared_ptr<std::vector<char>> Scan::get_result_bitset() {
+  if (std::find(_result_bitset_init->cbegin(), _result_bitset_init->cend(),
+                static_cast<char>(true)) != _result_bitset_init->cend()) {
     return _result_bitset_init;
   } else {
     return _result_bitset;

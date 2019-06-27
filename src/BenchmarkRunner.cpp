@@ -11,21 +11,17 @@
 namespace indexvsscan {
 
 void BenchmarkRunner::execute() {
-  const auto run_instruction = [&](const Instruction &instruction) {
-    _run_instruction(instruction);
+  const auto run_instructions = [&](const std::vector<Instruction>& instructions) {
+    for (const auto& instruction : instructions) _run_instruction(instruction);
   };
 
-  if (MULTITHREADING) {
+  if (_config.multithreading) {
+    std::vector<std::thread> threads{};
     for (size_t i = 0; i < _config.num_runs; i++) {
-      std::vector<std::thread> threads{};
-
-      for (const auto &instruction : _config.instructions) {
-        threads.emplace_back(std::thread(run_instruction, instruction));
-      }
-
-      for (auto &t : threads) {
-        t.join();
-      }
+      threads.emplace_back(std::thread(run_instructions, _config.instructions));
+    }
+    for (auto &t : threads) {
+      t.join();
     }
   }
   else {
@@ -34,8 +30,8 @@ void BenchmarkRunner::execute() {
         _run_instruction(instruction);
       }
     }
-    _print_results();
   }
+  _print_results();
 }
 
 void BenchmarkRunner::_run_instruction(const Instruction& instruction) {
@@ -402,9 +398,9 @@ void BenchmarkRunner::_run_instruction(const Instruction& instruction) {
   }
 }
 
-size_t BenchmarkRunner::_count_results(const std::shared_ptr<std::vector<bool>> vec) const {
+size_t BenchmarkRunner::_count_results(const std::shared_ptr<std::vector<char>> vec) const {
   size_t count = 0;
-  for (const auto& b : *vec) if (b) count++;
+  for (const auto& b : *vec) count+= b;
   return count;
 }
 

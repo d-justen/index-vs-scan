@@ -1,3 +1,9 @@
+Run benchmarks
+1. `mkdir cmake-build-release && cd cmake-build-release`
+2. `cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_COMPILER=gcc -DCMAKE_CXX_COMPILER=g++ ..`
+3. `cd ..`
+4. `sh run_benchmarks.sh`
+
 Compile and run (debug)
 1. `mkdir cmake-build-debug && cd cmake-build-debug`
 2. `cmake ..`

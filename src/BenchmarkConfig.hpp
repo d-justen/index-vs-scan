@@ -6,9 +6,6 @@
 
 namespace indexvsscan {
 
-constexpr uint32_t TABLE_LENGTH = 1'000'000;
-const bool MULTITHREADING = false;
-
 enum class ColumnType { Int, String };
 enum class Operation {
   Equals,
@@ -42,6 +39,7 @@ struct BenchmarkConfig {
   std::vector<ColumnDefinition> column_definitions;
   std::vector<Instruction> instructions;
   uint32_t num_runs;
+  bool multithreading;
 };
 
 struct Result {
