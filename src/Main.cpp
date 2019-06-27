@@ -24,24 +24,25 @@ int main(int argc, char *argv[]) {
     const bool multithreading = std::atoi(argv[3]) != 0;
     std::cout << "Multithreading: " << (multithreading ? "ON" : "OFF") << "\n";
     uint32_t num_runs = std::atoi(argv[4]);
+    uint32_t num_distinct_vals = std::atoi(argv[5]);
 
     std::vector<ColumnDefinition> definitions {
-        ColumnDefinition(is_int ? ColumnType::Int : ColumnType::String, 1'000'000, OperationType::LessOrEquals, 0.05,  is_int ? int_select : string_select),
-        ColumnDefinition(is_int ? ColumnType::Int : ColumnType::String, 1'000'000, OperationType::LessOrEquals, 0.075, is_int ? int_select : string_select),
-        ColumnDefinition(is_int ? ColumnType::Int : ColumnType::String, 1'000'000, OperationType::LessOrEquals, 0.1,   is_int ? int_select : string_select),  // Make one StringColumn with 5 distinct values and selectivity 0.2
-        ColumnDefinition(is_int ? ColumnType::Int : ColumnType::String, 1'000'000, OperationType::LessOrEquals, 0.125, is_int ? int_select : string_select),
-        ColumnDefinition(is_int ? ColumnType::Int : ColumnType::String, 1'000'000, OperationType::LessOrEquals, 0.15,  is_int ? int_select : string_select),
-        ColumnDefinition(is_int ? ColumnType::Int : ColumnType::String, 1'000'000, OperationType::LessOrEquals, 0.2,   is_int ? int_select : string_select),
-        ColumnDefinition(is_int ? ColumnType::Int : ColumnType::String, 1'000'000, OperationType::LessOrEquals, 0.25,  is_int ? int_select : string_select),
-        ColumnDefinition(is_int ? ColumnType::Int : ColumnType::String, 1'000'000, OperationType::LessOrEquals, 0.3,   is_int ? int_select : string_select),
-        ColumnDefinition(is_int ? ColumnType::Int : ColumnType::String, 1'000'000, OperationType::LessOrEquals, 0.4,   is_int ? int_select : string_select),
-        ColumnDefinition(is_int ? ColumnType::Int : ColumnType::String, 1'000'000, OperationType::LessOrEquals, 0.45,  is_int ? int_select : string_select),
-        ColumnDefinition(is_int ? ColumnType::Int : ColumnType::String, 1'000'000, OperationType::LessOrEquals, 0.5,   is_int ? int_select : string_select),
-        ColumnDefinition(is_int ? ColumnType::Int : ColumnType::String, 1'000'000, OperationType::LessOrEquals, 0.55,  is_int ? int_select : string_select),
-        ColumnDefinition(is_int ? ColumnType::Int : ColumnType::String, 1'000'000, OperationType::LessOrEquals, 0.6,   is_int ? int_select : string_select),
-        ColumnDefinition(is_int ? ColumnType::Int : ColumnType::String, 1'000'000, OperationType::LessOrEquals, 0.8,   is_int ? int_select : string_select),
-        ColumnDefinition(is_int ? ColumnType::Int : ColumnType::String, 1'000'000, OperationType::LessOrEquals, 0.9,   is_int ? int_select : string_select),
-        ColumnDefinition(is_int ? ColumnType::Int : ColumnType::String, 1'000'000, OperationType::LessOrEquals, 0.95,  is_int ? int_select : string_select),
+        ColumnDefinition(is_int ? ColumnType::Int : ColumnType::String, num_distinct_vals, OperationType::LessOrEquals, 0.05,  is_int ? int_select : string_select),
+        ColumnDefinition(is_int ? ColumnType::Int : ColumnType::String, num_distinct_vals, OperationType::LessOrEquals, 0.075, is_int ? int_select : string_select),
+        ColumnDefinition(is_int ? ColumnType::Int : ColumnType::String, num_distinct_vals, OperationType::LessOrEquals, 0.1,   is_int ? int_select : string_select),  // Make one StringColumn with 5 distinct values and selectivity 0.2
+        ColumnDefinition(is_int ? ColumnType::Int : ColumnType::String, num_distinct_vals, OperationType::LessOrEquals, 0.125, is_int ? int_select : string_select),
+        ColumnDefinition(is_int ? ColumnType::Int : ColumnType::String, num_distinct_vals, OperationType::LessOrEquals, 0.15,  is_int ? int_select : string_select),
+        ColumnDefinition(is_int ? ColumnType::Int : ColumnType::String, num_distinct_vals, OperationType::LessOrEquals, 0.2,   is_int ? int_select : string_select),
+        ColumnDefinition(is_int ? ColumnType::Int : ColumnType::String, num_distinct_vals, OperationType::LessOrEquals, 0.25,  is_int ? int_select : string_select),
+        ColumnDefinition(is_int ? ColumnType::Int : ColumnType::String, num_distinct_vals, OperationType::LessOrEquals, 0.3,   is_int ? int_select : string_select),
+        ColumnDefinition(is_int ? ColumnType::Int : ColumnType::String, num_distinct_vals, OperationType::LessOrEquals, 0.4,   is_int ? int_select : string_select),
+        ColumnDefinition(is_int ? ColumnType::Int : ColumnType::String, num_distinct_vals, OperationType::LessOrEquals, 0.45,  is_int ? int_select : string_select),
+        ColumnDefinition(is_int ? ColumnType::Int : ColumnType::String, num_distinct_vals, OperationType::LessOrEquals, 0.5,   is_int ? int_select : string_select),
+        ColumnDefinition(is_int ? ColumnType::Int : ColumnType::String, num_distinct_vals, OperationType::LessOrEquals, 0.55,  is_int ? int_select : string_select),
+        ColumnDefinition(is_int ? ColumnType::Int : ColumnType::String, num_distinct_vals, OperationType::LessOrEquals, 0.6,   is_int ? int_select : string_select),
+        ColumnDefinition(is_int ? ColumnType::Int : ColumnType::String, num_distinct_vals, OperationType::LessOrEquals, 0.8,   is_int ? int_select : string_select),
+        ColumnDefinition(is_int ? ColumnType::Int : ColumnType::String, num_distinct_vals, OperationType::LessOrEquals, 0.9,   is_int ? int_select : string_select),
+        ColumnDefinition(is_int ? ColumnType::Int : ColumnType::String, num_distinct_vals, OperationType::LessOrEquals, 0.95,  is_int ? int_select : string_select),
     };
 
     std::vector<Instruction> instructions {
