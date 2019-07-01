@@ -39,20 +39,20 @@ void Scan::int_leq(uint32_t id, uint32_t value) {
 void Scan::int_eq_bitset(const uint32_t id, const uint32_t value) {
   const auto& column = _table->get_int_column(id);
 
-  auto& result_ref = *_result_bitset;
+  auto& result_ref = *_result_bitset_init;
 
   for (uint32_t i = 0; i < column.size(); i++) {
-    result_ref.push_back(column[i] == value);
+    result_ref[i] = column[i] == value;
   }
 }
 
 void Scan::int_leq_bitset(const uint32_t id, const uint32_t value) {
     const auto& column = _table->get_int_column(id);
 
-    auto& result_ref = *_result_bitset;
+    auto& result_ref = *_result_bitset_init;
 
     for (uint32_t i = 0; i < column.size(); i++) {
-        result_ref.push_back(column[i] <= value);
+        result_ref[i] = column[i] <= value;
     }
 }
 
@@ -91,10 +91,10 @@ void Scan::int_eq_dict_bitset(const uint32_t id, const uint32_t value) {
   const auto lower_bound = std::lower_bound(dict.cbegin(), dict.cend(), value);
   const auto distance = std::distance(dict.cbegin(), lower_bound);
 
-  auto& result_ref = *_result_bitset;
+  auto& result_ref = *_result_bitset_init;
 
   for (uint32_t i = 0; i  < av.size(); i++) {
-    result_ref.push_back(av[i] == distance);
+    result_ref[i] = av[i] == distance;
   }
 }
 
@@ -226,10 +226,10 @@ void Scan::string_leq(const uint32_t id, const String& value) {
 void Scan::string_eq_bitset(const uint32_t id, const String& value) {
   const auto& column = _table->get_string_column(id);
 
-  auto& result_ref = *_result_bitset;
+  auto& result_ref = *_result_bitset_init;
 
   for (uint32_t i = 0; i < column.size(); i++) {
-    result_ref.push_back(column[i] == value);
+    result_ref[i] = column[i] == value;
   }
 }
 
@@ -279,10 +279,10 @@ void Scan::string_eq_dict_bitset(const uint32_t id, const String& value) {
   const auto lower_bound = std::lower_bound(dict.cbegin(), dict.cend(), value);
   const auto distance = std::distance(dict.cbegin(), lower_bound);
 
-  auto& result_ref = *_result_bitset;
+  auto& result_ref = *_result_bitset_init;
 
   for (uint32_t i = 0; i  < av.size(); i++) {
-    result_ref.push_back(av[i] == distance);
+    result_ref[i] = av[i] == distance;
   }
 }
 
