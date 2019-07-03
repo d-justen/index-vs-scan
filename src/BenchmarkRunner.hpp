@@ -26,7 +26,6 @@ class BenchmarkRunner {
   const std::shared_ptr<Table> _table;
 
   std::vector<Result> _results;
-  std::mutex _results_mutex;
 };
 
 }  // namespace indexvsscan

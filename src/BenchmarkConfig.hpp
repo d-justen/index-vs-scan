@@ -30,9 +30,9 @@ using Selectivity = double;
 using Value = uint32_t;
 using ColumnDefinition = std::tuple<ColumnType, ValueCount, OperationType , Selectivity, Value>;
 
-// 1. Which column type 2. Index of column 3. which operation 4. value to compare
+// 0. Id 1. Which column type 2. Index of column 3. which operation 4. value to compare
 // Note: if ColumnType::String uint32_t is converted to char ten times
-using Instruction = std::tuple<ColumnType, uint32_t, Operation, uint32_t>;
+using Instruction = std::tuple<uint32_t, ColumnType, uint32_t, Operation, uint32_t>;
 
 struct BenchmarkConfig {
   uint32_t num_rows;
@@ -40,6 +40,7 @@ struct BenchmarkConfig {
   std::vector<Instruction> instructions;
   uint32_t num_runs;
   bool multithreading;
+  uint8_t num_threads;
 };
 
 struct Result {

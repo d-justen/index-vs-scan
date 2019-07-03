@@ -5,38 +5,55 @@
 #include <fstream>
 #include <math.h>
 #include <thread>
+#include <tuple>
 
 #include "Scan.hpp"
 
 namespace indexvsscan {
 
 void BenchmarkRunner::execute() {
-  const auto run_instructions = [&](const std::vector<Instruction>& instructions) {
-    for (const auto& instruction : instructions) _run_instruction(instruction);
+  const auto run_instructions = [&](const std::vector<Instruction>& instructions, int from, const int to) {
+    for (; from < to; from++) {
+      _run_instruction(instructions[from]);
+    }
   };
+
+  const auto multiply_inst_ids = [&](std::vector<Instruction> instructions, const int mult) {
+    for (auto& inst : instructions) {
+      std::get<0>(inst) += mult * instructions.size();
+    }
+    return instructions;
+  };
+
+  std::vector<Instruction> all_instructions{};
+
+  for (int i=0; i<_config.num_runs; i++) {
+    const auto new_instrs = multiply_inst_ids(_config.instructions, i);
+    all_instructions.insert(all_instructions.cend(), new_instrs.cbegin(), new_instrs.cend());
+  }
+
+  _results = std::vector<Result>(all_instructions.size());
 
   if (_config.multithreading) {
     std::vector<std::thread> threads{};
-    for (size_t i = 0; i < _config.num_runs; i++) {
-      threads.emplace_back(std::thread(run_instructions, _config.instructions));
+
+    for (int i = 0; i < _config.num_threads; i++) {
+      const int from = _config.num_runs / _config.num_threads * i;
+      const int to = _config.num_runs / _config.num_threads * (i+1);
+      threads.emplace_back(std::thread(run_instructions, all_instructions, from, to));
     }
     for (auto &t : threads) {
       t.join();
     }
   }
   else {
-    for (size_t i = 0; i < _config.num_runs; i++) {
-      for (const auto &instruction : _config.instructions) {
-        _run_instruction(instruction);
-      }
-    }
+    run_instructions(all_instructions, 0, all_instructions.size());
   }
   _print_results();
 }
 
 void BenchmarkRunner::_run_instruction(const Instruction& instruction) {
-  const auto [column_type, index, operation, value] = instruction;
-
+  const auto [id, column_type, index, operation, value] = instruction;
   if (column_type == ColumnType::Int) {
     switch (operation) {
       case Operation::Equals : {
@@ -405,8 +422,8 @@ size_t BenchmarkRunner::_count_results(const std::shared_ptr<std::vector<char>> 
 }
 
 void BenchmarkRunner::_append_result(const Result& result) {
-  std::lock_guard<std::mutex> lock(_results_mutex);
-  _results.push_back(result);
+  const auto id = std::get<0>(result.instruction);
+  _results[id] = result;
 }
 
 void BenchmarkRunner::_print_results() {
@@ -416,7 +433,7 @@ void BenchmarkRunner::_print_results() {
   file << "column_type,index,operation,value,row_count,row_size_mb,selectivity,duration_microseconds,bandwidth_gb_s\n";
 
   for (size_t i = 0; i < _results.size(); i++) {
-    const auto [column_type, index, operation, value] = _results[i].instruction;
+    const auto [id, column_type, index, operation, value] = _results[i].instruction;
     const auto byte_per_microsecond = (static_cast<double>(_results[i].num_bytes / std::max(_results[i].microseconds, 1L)));
     const auto gb_per_microsecond = byte_per_microsecond / std::pow(1000, 3);
     const auto gb_per_second = gb_per_microsecond * 1'000'000;

@@ -25,12 +25,12 @@ int main(int argc, char *argv[]) {
 
     std::string argv3 = argv[3];
     const bool multithreading = argv3 == "mt";
+    const uint8_t num_threads = std::atol(argv[4]);
+    std::cout << "Multithreading: " << (multithreading ? "ON, " : "OFF, ") << num_threads << " threads\n";
+    uint32_t num_runs = std::atoi(argv[5]);
+    uint32_t num_distinct_vals = std::atoi(argv[6]);
 
-    std::cout << "Multithreading: " << (multithreading ? "ON" : "OFF") << "\n";
-    uint32_t num_runs = std::atoi(argv[4]);
-    uint32_t num_distinct_vals = std::atoi(argv[5]);
-
-    std::string argv6 = argv[6];
+    std::string argv6 = argv[7];
     const bool leq = argv6 == "leq";
 
     uint32_t select = string_dist(generator);
@@ -56,9 +56,11 @@ int main(int argc, char *argv[]) {
     int begin_op = leq ? 7 : 0;
     int end_op = leq ? 14 : 7;
 
+    size_t count = 0;
     for (; begin_op < end_op; begin_op++) {
         for (int i = 0; i < 16; i++) {
-            instructions.push_back(Instruction(ct, i, Operation{begin_op}, select));
+            instructions.push_back(Instruction(count, ct, i, Operation{begin_op}, select));
+            count++;
         }
     }
 
@@ -67,7 +69,8 @@ int main(int argc, char *argv[]) {
         definitions,
         instructions,
         num_runs,
-        multithreading
+        multithreading,
+        num_threads
     };
     const auto table = std::make_shared<Table>(config);
     BenchmarkRunner runner(config, table);
