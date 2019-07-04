@@ -156,6 +156,8 @@ void Table::_fill_int_column(const size_t index, const uint32_t value_count, Ope
 
   std::shuffle((*_int_columns)[index].begin(), (*_int_columns)[index].end(), generator);
 
+  //TODO prüfen ob tatsächlich so viele vals drin sind wie erhofft
+
   // Map column values to their positions
   std::map<uint32_t, std::vector<uint32_t>> map;
 

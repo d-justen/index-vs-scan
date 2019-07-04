@@ -9,7 +9,7 @@
 #include "BenchmarkRunner.hpp"
 
 using namespace indexvsscan;
-
+// TODO prädikat überprüfen
 int main(int argc, char *argv[]) {
     std::mt19937 generator(1337);
     std::uniform_int_distribution<uint32_t> int_dist((UINT32_MAX / 2) - 1000, (UINT32_MAX / 2) + 1000);
