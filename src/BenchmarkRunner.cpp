@@ -40,7 +40,6 @@ void BenchmarkRunner::execute() {
     for (int i = 0; i < _config.num_threads; i++) {
       const int from = _config.num_runs / _config.num_threads * i * 16 * 7;
       const int to = _config.num_runs / _config.num_threads * (i+1) * 16 * 7;
-      std::cout << "Thread " << i << " from " << from << " to " << to << std::endl;
       threads.emplace_back(std::thread(run_instructions, all_instructions, from, to));
     }
     for (auto &t : threads) {
@@ -425,7 +424,6 @@ size_t BenchmarkRunner::_count_results(const std::shared_ptr<std::vector<char>> 
 void BenchmarkRunner::_append_result(const Result& result) {
   const auto id = std::get<0>(result.instruction);
   _results[id] = result;
-  std::cout << "Write in id " << id << std::endl;
 }
 
 void BenchmarkRunner::_print_results() {
